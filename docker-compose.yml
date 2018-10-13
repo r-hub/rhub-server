@@ -1,0 +1,55 @@
+version: '3.3'
+
+volumes:
+   session-data:
+   log-data:
+   queue-data:
+
+services:
+   frontend:
+     build: https://github.com/r-hub/rhub-frontend.git#dockerize
+     ports:
+     - "3000:3000"
+     environment:
+     - RABBITMQ_URL=${RABBITMQ_URL}
+     - LOGDB_URL=${LOGDB_URL}
+     - REDIS_URL=${REDIS_URL}
+     - REDIS_EMAIL_URL=R{REDIS_EMAIL_URL}
+     - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+     - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+     depends_on:
+     - redis
+     - queue
+     - logdb
+   backend:
+     build: https://github.com/r-hub/rhub-backend.git#dockerize
+     environment:
+     - RABBITMQ_URL=${RABBITMQ_URL}
+     depends_on:
+     - queue
+   redis:
+     image: "redis:4.0.11-alpine"
+     ports:
+     - "3001:6379"
+     volumes:
+     - session-data:/data
+   queue:
+     image: "rabbitmq:3.7.8-alpine"
+     ports:
+     - "3003:5672"
+     volumes:
+     - queue-data:/var/lib/rabbitmq
+   logdb:
+     image: "couchdb:2.2"
+     ports:
+     - "3002:5984"
+     volumes:
+     - log-data:/opt/couchdb/data
+   logdb-seed:
+     build: ./seed
+     volumes:
+      - ./seed/logdb:/seed
+     environment:
+     - LOGDB_URL=${LOGDB_URL}
+     depends_on:
+     - logdb
