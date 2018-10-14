@@ -21,6 +21,7 @@ services:
      - MAILGUN_DOMAIN=${MAILGUN_DOMAIN}
      - MAILGUN_API_KEY=${MAILGUN_API_KEY}
      - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080
+     - RHUB_BUILDER_URL=http://frontend:3000
      depends_on:
      - redis
      - queue
@@ -71,6 +72,13 @@ services:
      ports:
      - "8080:8080"
    linux-builder:
-     - build: ./linux-builder
+     hostname: linux-builder
+     build: ./linux-builder
+     volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
      environment:
-     - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080
+     - JENKINS_URL=http://jenkins:8080
+     - JENKINS_USER=${JENKINS_USER}
+     - JENKINS_PASSWORD=${JENKINS_PASSWORD}
+     - RHUB_EXECUTORS=4
+     - JENKINS_LABELS=swarm linux
