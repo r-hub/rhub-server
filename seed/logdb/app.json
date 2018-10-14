@@ -5,6 +5,9 @@
       "map": "function (doc) { \n\temit([doc.email, doc.submitted], doc);\n\t}"
     },
     "emailpackage": {
+      "map": "function (doc) {\n\temit([doc.email, doc.package, doc.submitted],doc)\n}\n"
+    },
+    "stats": {
       "map": "function (doc) {\n  emit(\n    doc.submitted,\n    { email: doc.email,\n      package: doc.package,\n      platform: doc.platform.name,\n      status: doc.status,\n      submitted: doc.submitted,\n      started: doc.started,\n      build_time: doc.build_time\n    });\n}\n"
     }
   },
