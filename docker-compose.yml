@@ -4,6 +4,7 @@ volumes:
    session-data:
    log-data:
    queue-data:
+   jenkins-data:
 
 services:
    frontend:
@@ -17,16 +18,22 @@ services:
      - REDIS_EMAIL_URL=R{REDIS_EMAIL_URL}
      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+     - MAILGUN_DOMAIN=${MAILGUN_DOMAIN}
+     - MAILGUN_API_KEY=$MAILGUN_API_KEY}
+     - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080
      depends_on:
      - redis
      - queue
      - logdb
+     - jenkins
    backend:
      build: https://github.com/r-hub/rhub-backend.git#dockerize
      environment:
      - RABBITMQ_URL=${RABBITMQ_URL}
+     - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080
      depends_on:
      - queue
+     - jenkins
    redis:
      image: "redis:4.0.11-alpine"
      ports:
@@ -53,3 +60,13 @@ services:
      - LOGDB_URL=${LOGDB_URL}
      depends_on:
      - logdb
+   jenkins:
+     build: ./jenkins
+     volumes:
+     - jenkins-data:/var/jenkins_home
+     environment:
+     - JENKINS_ROOT_URL=${JENKINS_ROOT_URL}
+     - JENKINS_USER=${JENKINS_USER}
+     - JENKINS_PASSWORD=${JENKINS_PASSWORD}
+     ports:
+     - "8080:8080"

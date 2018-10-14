@@ -1,0 +1,5 @@
+elastic-axis:1.2
+groovy-postbuild:2.4.2
+matrix-auth:2.3
+publish-over-ssh:1.20.1
+swarm:3.14
