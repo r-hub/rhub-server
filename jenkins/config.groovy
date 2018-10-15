@@ -25,3 +25,7 @@ import jenkins.model.Jenkins
 def instance = Jenkins.instance
 instance.setCrumbIssuer(new DefaultCrumbIssuer(true))
 instance.save()
+
+// Quiet period
+instance = Jenkins.getInstance()
+instance.setQuietPeriod(0)
