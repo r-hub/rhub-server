@@ -1,6 +1,7 @@
 version: '3.3'
 
 volumes:
+   uploads-data:
    session-data:
    log-data:
    queue-data:
@@ -22,6 +23,8 @@ services:
      - MAILGUN_API_KEY=${MAILGUN_API_KEY}
      - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080
      - RHUB_BUILDER_URL=http://frontend:3000
+     volumes:
+     - uploads-data:/usr/src/app/uploads
      depends_on:
      - redis
      - queue
