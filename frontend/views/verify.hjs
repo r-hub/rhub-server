@@ -1,0 +1,121 @@
+<!-- mode: -*- html -*- -->
+{{< layout}}
+
+{{$ extraheader }}
+<link href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css"
+      rel="stylesheet"/>
+{{/ extraheader }}
+
+{{$ content }}
+
+<div class="jumbotron search-box">
+  <div class="container">
+    <div class="row"><div class="col-lg-12">
+	<h1 class="text-center">The r-hub builder</h1>
+    </div></div>
+  </div>
+</div>
+
+<div class="row">
+
+  <div class="col-md-6 col-eq-height">
+    <div class="well well-verify-1">
+      <h2>
+	<span class="glyphicon glyphicon-gift" aria-hidden="true"></span>
+	Package: {{ package }}
+      </h2>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-eq-height">
+    <div class="well well-verify-1">
+      <h2>
+	<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+	Maintainer: {{ email }}
+      </h2>
+    </div>
+  </div>
+
+</div>
+
+<div class="row">
+
+  <div class="col-md-5"><div class="well well-verify-2">
+      <p class="verify-gh">
+	<span class="huge-gh"><i class="fa fa-github"></i></span>
+      </p>
+      <div class="btn-group btn-group-justified" role="group" aria-label="...">
+	<div class="btn-group" role="group">
+	  <a href="/login/github" class="btn btn-primary">
+	    Verify maintainer email via GitHub
+	  </a>
+	</div>
+      </div>
+  </div></div>
+
+  <div class="col-md-2 well-verify-2 vcenter-outer">
+    <div class="vcenter">
+      <p class="verify-gh">
+	<span class="large-gh">– OR –</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="col-md-5"><div class="well well-verify-2">
+    <p class="verify-gh">
+      <span class="huge-gh"><i class="fa fa-envelope"></i></span>
+    </p>
+    <form class="form-inline" action="/login/submitcode" method="post">
+    <div class="btn-group btn-group-justified" role="group" aria-label="...">
+      <div class="btn-group" role="group">
+	<a href="/login/sendcode" class="btn btn-primary" id="sendcode">
+	  Send verification code
+	</a>
+      </div>
+      <div class="btn-group" role="group">
+	<input type="text" class="form-control" id="code" name="code"
+	       placeholder="Enter code here" />
+      </div>
+      <div class="btn-group" role="group">
+	<button class="btn btn-success" type="submit">Submit</button>
+      </div>
+    </div>
+    </div>
+    </form>
+  </div>
+
+</div></div>
+
+<style>
+#toast-container > div {
+  opacity: 1;
+  font-size: 200%;
+  text-align: center;
+}
+</style>
+
+{{/content}}
+
+{{$ scripts }}
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js">
+</script>
+
+<script>
+  function add_clicks() {
+      toastr.options.positionClass = 'toast-top-full-width';
+      $('#sendcode').click(function(e) {
+	  $.get('/login/sendcode')
+              .done(function() {
+                   toastr.success('Email sent successfully');
+	      })
+	      .fail(function() {
+                   toastr.error('Cannot send email!');
+	      });
+          return false;
+      })
+  }
+  window.onload = add_clicks;
+</script>
+{{/ scripts }}
+
+{{/ layout }}

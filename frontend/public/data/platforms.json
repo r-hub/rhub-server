@@ -1,0 +1,257 @@
+[
+    {
+	"name": "debian-gcc-devel",
+	"description": "Debian Linux, R-devel, GCC",
+	"cran-name": "r-devel-linux-x86_64-debian-gcc",
+	"rversion": "r-devel",
+	"os-type": "Linux",
+	"cpu-type": "x86_64",
+	"os-info": "Debian GNU/Linux testing",
+	"compilers": "GCC 6.2.0 (Debian 6.2.0-6)",
+	"docker-image": "debian-gcc-devel",
+	"sysreqs-platform": "linux-x86_64-debian-gcc",
+	"categories": ["Linux"]
+    },
+
+    {
+	"name": "debian-gcc-release",
+	"description": "Debian Linux, R-release, GCC",
+	"cran-name": "r-release-linux-x86_64",
+	"rversion": "r-release",
+	"os-type": "Linux",
+	"cpu-type": "x86_64",
+	"os-info": "Debian GNU/Linux testing",
+	"compilers": "GCC 6.2.0 (Debian 6.2.0-6)",
+	"docker-image": "debian-gcc-release",
+	"sysreqs-platform": "linux-x86_64-debian-gcc",
+	"categories": ["Linux"]
+    },
+
+    {
+	"name": "debian-gcc-patched",
+	"description": "Debian Linux, R-patched, GCC",
+	"cran-name": "r-patched-linux-x86_64",
+	"rversion": "r-patched",
+	"os-type": "Linux",
+	"cpu-type": "x86_64",
+	"os-info": "Debian GNU/Linux testing",
+	"compilers": "GCC 6.2.0 (Debian 6.2.0-6)",
+	"docker-image": "debian-gcc-patched",
+	"sysreqs-platform": "linux-x86_64-debian-gcc",
+	"categories": ["Linux"]
+    },
+
+    {
+	"name": "fedora-gcc-devel",
+	"description": "Fedora Linux, R-devel, GCC",
+	"cran-name": "r-devel-linux-x86_64-fedora-gcc",
+	"rversion": "r-devel",
+	"os-type": "Linux",
+	"cpu-type": "x86_64",
+	"os-info": "Fedora 24",
+	"compilers": "GCC 6.1.1",
+	"docker-image": "fedora-gcc-devel",
+	"sysreqs-platform": "linux-x86_64-fedora-gcc",
+	"categories": ["Linux"]
+    },
+
+    {
+	"name": "fedora-clang-devel",
+	"description": "Fedora Linux, R-devel, clang, gfortran",
+	"cran-name": "r-devel-linux-x86_64-fedora-clang",
+	"rversion": "r-devel",
+	"os-type": "Linux",
+	"cpu-type": "x86_64",
+	"os-info": "Fedora 24",
+	"compilers": "clang version 3.8.0; GNU Fortran 6.1.1",
+	"docker-image": "fedora-clang-devel",
+	"sysreqs-platform": "linux-x86_64-fedora-clang",
+	"categories": ["Linux"]
+    },
+
+    {
+	"name": "ubuntu-gcc-devel",
+	"description": "Ubuntu Linux 16.04 LTS, R-devel, GCC",
+	"cran-name": null,
+	"rversion": "r-devel",
+	"os-type": "Linux",
+	"cpu-type": "x86_64",
+	"os-info": "Ubuntu 16.04 LTS",
+	"compilers": "GCC 5.3.1",
+	"docker-image": "ubuntu-gcc-devel",
+	"sysreqs-platform": "linux-x86_64-ubuntu-gcc",
+	"categories": ["Linux"]
+    },
+
+    {
+	"name": "ubuntu-gcc-release",
+	"description": "Ubuntu Linux 16.04 LTS, R-release, GCC",
+	"cran-name": null,
+	"rversion": "r-release",
+	"os-type": "Linux",
+	"cpu-type": "x86_64",
+	"os-info": "Ubuntu 16.04 LTS",
+	"compilers": "GCC 5.3.1",
+	"docker-image": "ubuntu-gcc-release",
+	"sysreqs-platform": "linux-x86_64-ubuntu-gcc",
+	"categories": ["Linux"]
+    },
+
+    {
+	"name": "linux-x86_64-centos6-epel",
+	"description": "CentOS 6, stock R from EPEL",
+	"cran-name": null,
+	"rversion": "r-release",
+	"os-type": "Linux",
+	"cpu-type": "x86_64",
+	"os-info": "CentOS 6",
+	"compilers": "GCC 4.4.x",
+	"docker-image": "centos6-epel",
+	"sysreqs-platform": "linux-x86_64-centos6-epel",
+	"categories": ["Linux"]
+    },
+
+    {
+	"name": "linux-x86_64-centos6-epel-rdt",
+	"description": "CentOS 6 with Redhat Developer Toolset, R from EPEL",
+	"cran-name": null,
+	"rversion": "r-release",
+	"os-type": "Linux",
+	"cpu-type": "x86_64",
+	"os-info": "CentOS 6",
+	"compilers": "GCC 5.2.1",
+	"docker-image": "centos6-epel-rdt",
+	"sysreqs-platform": "linux-x86_64-centos6-epel",
+	"categories": ["Linux"]
+    },    
+
+    {
+	"name": "linux-x86_64-rocker-gcc-san",
+	"description": "Debian Linux, R-devel, GCC ASAN/UBSAN",
+	"cran-name": null,
+	"rversion": "r-devel",
+	"os-type": "Linux",
+	"cpu-type": "x86_64",
+	"os-info": "Debian GNU/Linux testing",
+	"compilers": "GCC 5.4.0 (Debian 5.4.0-4)",
+	"docker-image": "rocker-gcc-san",
+	"sysreqs-platform": "linux-x86_64-debian-gcc",
+        "output-parser": "sanitizers",
+	"categories": ["Checks for compiled code"]
+    },
+
+    {
+	"name": "windows-x86_64-oldrel",
+	"description": "Windows Server 2008 R2 SP1, R-oldrel, 32/64 bit",
+	"cran-name": "r-oldrel-windows-ix86+x86_64",
+	"rversion": "r-oldrel",
+	"os-type": "Windows",
+	"cpu-type": "x86_64",
+	"os-info": "Windows Server 2008 R2 SP1",
+	"compilers": "GCC 4.6.3, Rtools 3.3",
+	"docker-image": null,
+	"sysreqs-platform": "windows-2008",
+	"categories": ["Windows"]
+    },
+
+    {
+	"name": "windows-x86_64-release",
+	"description": "Windows Server 2008 R2 SP1, R-release, 32/64 bit",
+	"cran-name": "r-release-windows-ix86+x86_64",
+	"rversion": "r-release",
+	"os-type": "Windows",
+	"cpu-type": "x86_64",
+	"os-info": "Windows Server 2008 R2 SP1",
+	"compilers": "GCC 4.9.3, Rtools 3.4",
+	"docker-image": null,
+	"sysreqs-platform": "windows-2008",
+	"categories": ["Windows"]
+    },
+
+    {
+	"name": "windows-x86_64-patched",
+	"description": "Windows Server 2008 R2 SP1, R-patched, 32/64 bit",
+	"cran-name": null,
+	"rversion": "r-patched",
+	"os-type": "Windows",
+	"cpu-type": "x86_64",
+	"os-info": "Windows Server 2008 R2 SP1",
+	"compilers": "GCC 4.9.3, Rtools 3.4",
+	"docker-image": null,
+	"sysreqs-platform": "windows-2008",
+	"categories": ["Windows"]
+    },
+
+    {
+	"name": "windows-x86_64-devel",
+	"description": "Windows Server 2008 R2 SP1, R-devel, 32/64 bit",
+	"cran-name": "r-devel-windows-ix86+x86_64",
+	"rversion": "r-devel",
+	"os-type": "Windows",
+	"cpu-type": "x86_64",
+	"os-info": "Windows Server 2008 R2 SP1",
+	"compilers": "GCC 4.9.3, Rtools 3.4",
+	"docker-image": null,
+	"sysreqs-platform": "windows-2008",
+	"categories": ["Windows"]
+    },
+
+    {
+	"name": "macos-mavericks-oldrel",
+	"description": "macOS 10.9 Mavericks, R-oldrel (experimental)",
+	"cran-name": "r-oldrel-osx-x86_64",
+	"rversion": "r-oldrel",
+	"os-type": "macOS",
+	"macos-version": "mavericks",
+	"cpu-type": "x86_64",
+	"os-info": "Mac OS X 10.9.5 13F1911",
+	"compilers": "Apple LLVM version 6.0 (clang-600.0.57); GNU Fortran 4.2.3",
+	"docker-image": null,
+	"sysreqs-platform": "osx-x86_64-clang",
+	"categories": ["macOS"]
+    },
+
+    {
+	"name": "macos-elcapitan-release",
+	"description": "macOS 10.11 El Capitan, R-release (experimental)",
+	"cran-name": "r-release-osx-x86_64",
+	"rversion": "r-release",
+	"os-type": "macOS",
+	"macos-version": "elcapitan",
+	"cpu-type": "x86_64",
+	"os-info": "Mac OS X 10.11.6 15G1217",
+	"compilers": "Apple LLVM version 8.0 (clang-800.0.42.1); GNU Fortran 4.2.3",
+	"docker-image": null,
+	"sysreqs-platform": "osx-x86_64-clang",
+	"categories": ["macOS"]
+    },
+
+    {
+	"name": "ubuntu-rchk",
+	"description": "Ubuntu Linux 16.04 LTS, R-devel with rchk",
+	"cran-name": null,
+	"rversion": "r-devel",
+	"os-type": "Linux",
+	"cpu-type": "x86_64",
+	"os-info": "Ubuntu 16.04 LTS",
+	"compilers": "clang 3.8.0-2ubuntu4",
+	"docker-image": "ubuntu-rchk",
+	"sysreqs-platform": "linux-x86_64-ubuntu-gcc",
+        "output-parser": "rchk",
+	"categories": ["Checks for compiled code"]
+    },
+
+    {
+	"name": "solaris-x86-patched",
+	"description": "Oracle Solaris 10, x86, 32 bit, R-patched (experimental)",
+	"cran-name": "r-patched-solaris-x86",
+	"rversion": "r-patched",
+	"os-type": "Solaris",
+	"cpu-type": "x86_64",
+	"os-info": "SunOS 5.10 Generic_147148-26 i86pc i386 i86pc",
+	"compilers": "GCC 5.2.0",
+	"docker-image": null,
+	"sysreqs-platform": "solaris-10",
+	"categories": ["Solaris"]
+    }
+]

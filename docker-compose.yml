@@ -10,7 +10,7 @@ volumes:
 
 services:
    frontend:
-     build: https://github.com/r-hub/rhub-frontend.git#dockerize
+     build: ./frontend
      ports:
      - "3000:3000"
      environment:

@@ -1,0 +1,14 @@
+<!-- mode: -*- html -*- -->
+<hr>
+<footer>
+  <p class="text-center">
+    <a href="/terms.html">Terms of use</a>
+    &middot;
+    <a href="http://r-consortium.org">R consortium</a>
+  </p>
+</footer>
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="/javascripts/vendor/jquery-1.11.2.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/javascripts/vendor/bootstrap.min.js"></script>

@@ -1,0 +1,21 @@
+<!-- proper rendering and touch zooming on mobile -*- mode: html -*- -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Compiled and minified bootstrap CSS -->
+<link rel="stylesheet" href="/stylesheets/vendor/bootstrap.min.css">
+
+<!-- Optional bootstrap theme -->
+<link rel="stylesheet" href = "/stylesheets/vendor/bootstrap-theme.min.css">
+
+<!-- admin at rhub io -->
+<script src="https://use.fontawesome.com/46a593e3c9.js"></script>
+
+<!-- Local styles -->
+<link rel="stylesheet" href="/stylesheets/style.css">
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+<script src="/javascripts/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+
+<title> {{ title }} {{^ title }} R-hub builder {{/ title }} </title>

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>{{> header }}{{$ extraheader }}{{/ extraheader }}</head>
+  <body>
+    {{> ie7notice }}
+    {{> navbar }}
+    <div class="content">{{$ content }}{{/ content }}</content>
+    {{> footer }}
+    {{$ scripts }}{{/ scripts }}
+  </body>
+</html>
