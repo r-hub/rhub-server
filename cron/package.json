@@ -1,0 +1,27 @@
+{
+  "name": "rhub-cron",
+  "version": "1.0.0",
+  "description": "Scheduler for periodic JS tasks on r-hub",
+  "scripts": {
+    "start": "node ./bin/scheduler",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/r-hub/rhub-cron.git"
+  },
+  "keywords": [
+    "r-hub"
+  ],
+  "author": "Gabor Csardi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/r-hub/rhub-cron/issues"
+  },
+  "homepage": "https://github.com/r-hub/rhub-cron#readme",
+  "dependencies": {
+    "async": "^2.0.0-rc.3",
+    "cron": "^1.1.0",
+    "jenkins": "^0.16.0"
+  }
+}

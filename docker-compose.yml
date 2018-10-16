@@ -99,3 +99,7 @@ services:
      - artifacts-data:/usr/local/apache2/htdocs
      ports:
      - 3004:80
+   cron:
+     build: ./cron
+     environment:
+     - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080
