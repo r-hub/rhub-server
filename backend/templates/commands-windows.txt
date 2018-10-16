@@ -1,0 +1,13 @@
+
+# Notify the frontend that we are starting the build
+
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
+$d = (get-date).ToUniversalTime().toString('s')
+$u = ( $env:startPingUrl + '/' + $d )
+Invoke-WebRequest $u
+
+cp \Users\rhub\Documents\run.ps1 .\run.ps1
+cp \Users\rhub\Documents\slave.ps1 .\slave.ps1
+
+.\run.ps1 -verbose $env:package $env:JOB_BASE_NAME $env:url $env:rversion $env:checkArgs $env:envVars $env:build $env:pkgname

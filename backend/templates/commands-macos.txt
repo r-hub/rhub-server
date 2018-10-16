@@ -1,0 +1,8 @@
+
+# Notify the frontend that we are starting the build
+
+curl ${startPingUrl}/$(date -u +%Y-%m-%dT%H:%M:%SZ) || true
+
+cp ~/macoscheck/*.sh .
+
+./run.sh "${package}" "${JOB_BASE_NAME}" "${url}" "${rversion}" "${checkArgs}" "${envVars}" "${build}" "${pkgname}"

@@ -1,0 +1,188 @@
+
+# Notify the frontend that we are starting the build
+wget ${startPingUrl}/$(date -u +%Y-%m-%dT%H:%M:%SZ) || true
+
+# Get the platform, the R package uses this to determine
+# the packages needed
+export RHUB_PLATFORM=$(docker run --user docker \
+			      --rm rhub/${image} \
+			      bash -c 'echo $RHUB_PLATFORM')
+
+# Look up system requirements
+# wget https://raw.githubusercontent.com/MangoTheCat/remotes/r-hub/install-github.R
+# R -e "source(\"install-github.R\")\$value(\"r-hub/sysreqs\")"
+
+echo ">>>>>==================== Downloading and unpacking package file"
+
+wget -O "$package" "$url"
+DESC=$(tar tzf "$package" | grep "^[^/]*/DESCRIPTION$")
+tar xzf "$package" "$DESC"
+
+echo ">>>>>==================== Querying system requirements"
+
+sysreqs=$(Rscript -e "library(sysreqs); cat(sysreq_commands(\"$DESC\"))")
+rm "$DESC"
+
+echo ">>>>>==================== Installing system requirements"
+
+# Install them, if there is anything to install
+if [ ! -z "${sysreqs}" ]; then
+    echo "${sysreqs}" > sysreqs.sh
+    docker create --user root --name ${JOB_BASE_NAME}-1 \
+	   rhub/${image} bash /root/sysreqs.sh
+    # Copy over sysreqs.sh script
+    docker cp sysreqs.sh "${JOB_BASE_NAME}-1:/root/sysreqs.sh"
+    # Start it
+    docker start -i -a ${JOB_BASE_NAME}-1
+    # Save the container as an image
+    newimage=$(docker commit ${JOB_BASE_NAME}-1)
+else
+    # If there is nothing to install we just use the stock image
+    newimage=rhub/${image}
+fi
+
+if [ -z "$RHUB_CRAN_MIRROR" ]; then
+    RHUB_CRAN_MIRROR=http://jenkins.iotwjus4p5merbek114fbzbqud.dx.internal.cloudapp.net/
+fi
+
+# Inject env vars into container
+
+env=$(tempfile 2>/dev/null || mktemp)
+echo url=$url >> $env
+echo package=$package >> $env
+echo checkArgs=$checkArgs >> $env
+echo build=$build >> $env
+echo R_REMOTES_STANDALONE=true >> $env
+echo R_REMOTES_NO_ERRORS_FROM_WARNINGS=true >> $env
+echo TZ=Europe/London >> $env
+echo RHUB_CRAN_MIRROR="$RHUB_CRAN_MIRROR" >> $env
+echo "$envVars" >> $env
+
+# Run the check in the new image
+
+echo ">>>>>==================== Starting Docker container"
+
+cat >build.sh <<'EOF'
+## The default might not be the home directory, but /
+cd ~
+
+## Configure R, local package library, and also CRAN and BioConductor
+export PATH=$(ls /opt/R-* -d)/bin:$PATH
+if [[ -z "$RBINARY" ]]; then RBINARY="R"; fi
+export R_LIBS=~/R
+mkdir -p ~/R
+echo "options(repos = c(CRAN = \"$RHUB_CRAN_MIRROR\"))" >> ~/.Rprofile
+$RBINARY -e "source('https://bioconductor.org/biocLite.R')"
+echo "options(repos = BiocInstaller::biocinstallRepos())" >> ~/.Rprofile
+echo "unloadNamespace('BiocInstaller')" >> ~/.Rprofile
+
+if [[ "${RHUB_BINARIES}" == "yes" ]]; then
+  echo "options(repos = c(RHUBBIN = 'https://cranbinaries.r-hub.io/linux/ubuntu16.04-R33x/', RHUB='http://jenkins.iotwjus4p5merbek114fbzbqud.dx.internal.cloudapp.net/', getOption('repos')))" >> ~/.Rprofile
+fi
+
+cp "/tmp/${package}" .
+
+if [[ "${build}" == "true" ]]; then
+    echo ">>>>>==================== Running R CMD build"
+    mkdir build
+    cd build
+    tar xzf ../"${package}"
+    pkgname=$(ls | head -1 | sed 's/\///')
+    $RBINARY CMD build ${pkgname}
+    package=$(ls *.tar.gz | head -1)
+    cp "${package}" ..
+    cd ..
+fi
+
+## We put it here, so the main process can pick it up
+mkdir -p /tmp/output
+cp "${package}" /tmp/output/
+echo "${package}" > /tmp/output/filename
+
+echo ">>>>>==================== Querying package dependencies"
+
+## Download the single file install script from mangothecat/remotes
+## We cannot do this from R, because some R versions do not support
+## HTTPS. Then we install a proper 'remotes' package with it.
+curl -O https://raw.githubusercontent.com/MangoTheCat/remotes/r-hub/install-github.R
+xvfb-run --server-args="-screen 0 1024x768x24" $RBINARY -e "source(\"install-github.R\")\$value(\"r-lib/remotes@r-hub\")"
+
+echo ">>>>>==================== Installing package dependencies"
+
+## Print configuration information for compilers
+echo $PATH
+$RBINARY CMD config CC
+`$RBINARY CMD config CC` --version
+$RBINARY CMD config CXX
+`$RBINARY CMD config CXX` --version
+
+echo Pandoc:
+which pandoc
+ls -l `which pandoc`
+ls -l `which pandoc-citeproc`
+
+## Install the package, so its dependencies will be installed
+## This is a temporary solution, until remotes::install_deps works on a
+## package bundle
+xvfb-run --server-args="-screen 0 1024x768x24" $RBINARY -e "remotes::install_local(\"$package\", dependencies = TRUE, INSTALL_opts = \"--build\")"
+
+## If installation fails, then we do not run the check at all
+pkgname=$(echo $package | sed 's/_.*$//')
+if ! $RBINARY -q -e "library($pkgname)"; then exit 1; fi
+
+echo ">>>>>==================== Running R CMD check"
+
+## We only override this if it was not set by the user
+if [ -z "${_R_CHECK_FORCE_SUGGESTS_}" ]; then
+    export _R_CHECK_FORCE_SUGGESTS_=false
+fi
+
+if [ -z "$RHUB_CHECK_COMMAND" ]; then
+   RHUB_CHECK_COMMAND="$RBINARY CMD check $checkArgs"
+fi
+
+echo About to run xvfb-run $RHUB_CHECK_COMMAND $package
+xvfb-run --server-args="-screen 0 1024x768x24" $RHUB_CHECK_COMMAND "$package"
+
+echo ">>>>>==================== Done with R CMD check"
+
+pkgname=$(echo $package | sed 's/_.*$//')
+mkdir -p $pkgname.Rcheck || true
+mv *.tar.gz $pkgname.Rcheck/ || true
+EOF
+
+docker create -i --user docker --env-file $env \
+       --name ${JOB_BASE_NAME}-2 $newimage /bin/bash -l /tmp/build.sh
+docker cp build.sh "${JOB_BASE_NAME}-2:/tmp/build.sh"
+docker cp "${package}" "${JOB_BASE_NAME}-2:/tmp/${package}"
+docker start -i -a ${JOB_BASE_NAME}-2
+
+echo ">>>>>==================== Saving artifacts"
+
+# Save the artifacts
+rm -rf ${JOB_BASE_NAME}
+mkdir -p ${JOB_BASE_NAME}
+
+docker cp "${JOB_BASE_NAME}-2:/tmp/output/filename" . || true
+package=$(cat filename | head -1)
+docker cp "${JOB_BASE_NAME}-2:/tmp/${package}" \
+       ${JOB_BASE_NAME}/ || true
+pkgname=$(echo $package | sed 's/_.*$//')
+
+docker cp "${JOB_BASE_NAME}-2:/home/docker/${pkgname}.Rcheck" \
+       ${JOB_BASE_NAME}/ || true
+mv ${JOB_BASE_NAME}/${pkgname}.Rcheck/*.tar.gz \
+   ${JOB_BASE_NAME}/ || true
+
+if [ "x$RHUB_ARTIFACTS" = "xlocal" ]; then
+   cp -r ${JOB_BASE_NAME} /artifacts/
+fi
+
+# Destroy the new containers and the images
+# Only if we needed system installs, but not the stock image
+docker rm ${JOB_BASE_NAME}-1 || true
+docker rm ${JOB_BASE_NAME}-2 || true
+docker rm ${JOB_BASE_NAME}-3 || true
+if ! echo $newimage | grep -q 'rhub'; then
+    docker rmi $newimage || true
+fi

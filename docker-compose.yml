@@ -35,7 +35,7 @@ services:
      - logdb
      - jenkins
    backend:
-     build: https://github.com/r-hub/rhub-backend.git#dockerize
+     build: ./backend
      environment:
      - RABBITMQ_URL=${RABBITMQ_URL}
      - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080

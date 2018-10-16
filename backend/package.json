@@ -1,0 +1,21 @@
+{
+  "name": "rhub-backend",
+  "version": "1.0.0",
+  "description": "The back-end of r-hub. Picks up submissions from the queue and adds the builds to Jenkins.",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/scheduler"
+  },
+  "engines": {
+    "node": "4.4.x"
+  },
+  "dependencies": {
+    "amqplib": "^0.5.2",
+    "debug": "~2.2.0",
+    "jenkins": "^0.20.1",
+    "mustache": "^2.2.1",
+    "shell-quote": "^1.6.1"
+  }
+}
