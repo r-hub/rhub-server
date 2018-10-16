@@ -41,6 +41,9 @@ RUN curl -s https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-cl
 RUN touch /var/run/docker.sock && \
     chown root:docker /var/run/docker.sock
 
+RUN mkdir /artifacts && \
+    chown jenkins:jenkins /artifacts
+
 COPY run.sh /home/jenkins/run.sh
 RUN chmod +x /home/jenkins/run.sh
 

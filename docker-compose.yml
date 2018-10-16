@@ -6,6 +6,7 @@ volumes:
    log-data:
    queue-data:
    jenkins-data:
+   artifacts-data:
 
 services:
    frontend:
@@ -36,6 +37,7 @@ services:
      environment:
      - RABBITMQ_URL=${RABBITMQ_URL}
      - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080
+     - RHUB_ARTIFACTS=${RHUB_ARTIFACTS}
      depends_on:
      - queue
      - jenkins
@@ -80,6 +82,7 @@ services:
      build: ./linux-builder
      volumes:
      - /var/run/docker.sock:/var/run/docker.sock
+     - artifacts-data:/artifacts
      environment:
      - JENKINS_URL=http://jenkins:8080
      - JENKINS_USER=${JENKINS_USER}
@@ -87,3 +90,10 @@ services:
      - RHUB_EXECUTORS=4
      - JENKINS_LABELS=swarm linux
      - RHUB_CRAN_MIRROR=${RHUB_CRAN_MIRROR}
+     - RHUB_ARTIFACTS=${RHUB_ARTIFACTS}
+   artifacts:
+     build: ./artifacts
+     volumes:
+     - artifacts-data:/usr/local/apache2/htdocs
+     ports:
+     - 3004:80
