@@ -3,4 +3,6 @@ FROM alpine:3.8
 
 RUN apk add --no-cache curl bash jq
 
-CMD [ "bash", "-c", "/seed/run.sh" ]
+COPY . /seed
+
+CMD [ "echo" "Need to define entrypoint" ]

@@ -63,10 +63,12 @@ services:
      - log-data:/opt/couchdb/data
    logdb-seed:
      build: ./seed
-     volumes:
-      - ./seed/logdb:/seed
      environment:
      - LOGDB_URL=${LOGDB_URL}
+     entrypoint:
+     - bash
+     - -c
+     - /seed/logdb.sh
      depends_on:
      - logdb
    jenkins:
