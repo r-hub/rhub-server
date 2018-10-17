@@ -1,6 +1,2 @@
 version: '3.3'
 
-services:
-   frontend:
-     ports:
-     - "80:3000"

@@ -95,13 +95,13 @@ services:
      - JENKINS_LABELS=swarm linux
      - RHUB_CRAN_MIRROR=${RHUB_CRAN_MIRROR}
      - RHUB_ARTIFACTS=${RHUB_ARTIFACTS}
-   artifacts:
-     build: ./artifacts
-     volumes:
-     - artifacts-data:/usr/local/apache2/htdocs
-     ports:
-     - 127.0.0.1:3004:80
    cron:
      build: ./cron
      environment:
      - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080
+   nginx:
+     build: ./nginx
+     volumes:
+     - artifacts-data:/artifacts:ro
+     ports:
+     - 80:80
