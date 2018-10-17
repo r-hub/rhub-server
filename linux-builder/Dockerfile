@@ -55,4 +55,10 @@ USER jenkins
 
 RUN R -q -e 'source("https://install-github.me/r-hub/sysreqs")'
 
+# Need to switch back to root, because we need to change the group of
+# the docker socket, to be able to start sibling containers
+# run.sh will do su to start the jenkins swarm client as non-root
+
+USER root
+
 CMD [ "/home/jenkins/run.sh" ]
