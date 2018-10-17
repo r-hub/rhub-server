@@ -40,6 +40,8 @@ import jenkins.model.Jenkins;
 
 public createGlobalEnvironmentVariables(String key, String value) {
 
+  Jenkins instance = Jenkins.getInstance();
+
   DescribableList<NodeProperty<?>, NodePropertyDescriptor> globalNodeProperties =
     instance.getGlobalNodeProperties();
   List<EnvironmentVariablesNodeProperty> envVarsNodePropertyList =
