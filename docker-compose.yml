@@ -105,3 +105,9 @@ services:
      - artifacts-data:/artifacts:ro
      ports:
      - 80:80
+     depends_on:
+     - frontend
+     entrypoint:
+     - sh
+     - -c
+     - 'wait-for frontend:3000 -- nginx -g "daemon off;"'
