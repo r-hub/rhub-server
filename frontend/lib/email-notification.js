@@ -1,13 +1,8 @@
 
 var fs = require('fs');
 var mustache = require('mustache');
-var urls = require('../lib/urls');
 var pretty_ms = require('pretty-ms');
-var mailgun = require('mailgun-js')(
-  { apiKey: urls.mailgun_api_key, domain: urls.mailgun_domain });
-
-var SMTP_URL = urls.smtp_url;
-var SMTP_SERVER = urls.smtp_server;
+var send_email =  require('../lib/send-email');
 
 var RHUB_BUILDER_URL = process.env.RHUB_BUILDER_URL ||
     'http://127.0.0.1:3000';
@@ -97,7 +92,7 @@ function email_with_template(build, text_body, html_body, callback) {
 	html: mustache.render(html_body, dict)
     };
 
-    mailgun.messages().send(mail, function(error, info) {
+    send_email(mail, function(error, info) {
 	if (error) {
 	    console.log(error);
 	    return callback(error);

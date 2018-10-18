@@ -2,8 +2,7 @@
 var multiline = require('multiline');
 var uuid = require('uuid');
 var urls = require('../lib/urls');
-var mailgun = require('mailgun-js')(
-  { apiKey: urls.mailgun_api_key, domain: urls.mailgun_domain });
+var send_email =  require('../lib/send-email');
 
 var redis = require('redis');
 var cli_client = null;
@@ -47,7 +46,7 @@ function mail_verification_code(req, callback) {
 	    text: text_body.replace("${code}", code)
 	};
 
-        mailgun.messages().send(mail, function(error, info)  {
+        send_email(mail, function(error, info) {
 	  if (error) {
 	    console.log(error);
 	    return callback(error);

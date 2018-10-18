@@ -9,13 +9,17 @@ most of R-hub's services.
 For testing and development you can simply deploy the project on your
 computer, using Docker Compose. Try this first.
 
-1. To make email notifications work, you'll have to set the `MAILGUN_DOMAIN`
-and `MAILGUN_API_KEY` variables in the [.env](.env) file. You can create a
-mailgun account at <https://mailgun.com>. See <https://mailgun.com/pricing>
-for prices. Currently each month the first 10,000 emails are free and
-after that you pay at most $0.50 for 1,000 emails. Other email setups will
-be implemented later, see issue
-[#16](https://github.com/gaborcsardi/rhub-server/issues/16).
+1. To make email notifications work, you'll have to configure R-hub's SMTP
+settings. You can connect to an SMTP server, or use mailgun. For mailgun,
+you need to set the `RHUB_EMAIL_MODE` variable to `mailgun`, and also set
+the `MAILGUN_DOMAIN` and `MAILGUN_API_KEY` variables in the
+[.env](.env) file. You can create a mailgun account at
+<https://mailgun.com>. See <https://mailgun.com/pricing> for prices.
+Currently each month the first 10,000 emails are free and
+after that you pay at most $0.50 for 1,000 emails. To use an SMTP server,
+see the [.env](.env) file. You need to set `RHUB_EMAIL_MODE` to `smtp` and
+also set the `RHUB_SMTP_SERVER` variable. If you need need authentication
+set `RHUB_SMTP_USERNAME` and `RHUB_SMTP_PASSWORD`.
 
 1. By default the R-hub frontend will run on port 80 of 127.0.0.1. Make
 sure this port is available on your machine. Note that by default

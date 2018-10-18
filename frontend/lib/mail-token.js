@@ -1,8 +1,6 @@
 
 var multiline = require('multiline');
-var urls = require('../lib/urls');
-var mailgun = require('mailgun-js')(
-  { apiKey: urls.mailgun_api_key, domain: urls.mailgun_domain });
+var send_email =  require('../lib/send-email');
 
 var text_body = multiline(function() { /*
 Dear R package developer!
@@ -30,8 +28,8 @@ function mail_token(email, token, callback) {
 	text: text_body.replace("${code}", token)
     };
 
-    mailgun.messages().send(mail, function(error, info) {
-	if (error) {
+    send_email(mail, function(error, info) {
+        if (error) {
 	    console.log(error);
 	    return callback(error);
 	}
