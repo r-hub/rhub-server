@@ -19,6 +19,9 @@
     "url": "https://github.com/r-hub/rhub-cron/issues"
   },
   "homepage": "https://github.com/r-hub/rhub-cron#readme",
+  "engines": {
+    "node": "8.12.x"
+  },
   "dependencies": {
     "async": "^2.0.0-rc.3",
     "cron": "^1.1.0",
