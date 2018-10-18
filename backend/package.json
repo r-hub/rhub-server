@@ -9,11 +9,11 @@
     "start": "node ./bin/scheduler"
   },
   "engines": {
-    "node": "4.4.x"
+    "node": "8.12.x"
   },
   "dependencies": {
     "amqplib": "^0.5.2",
-    "debug": "~2.2.0",
+    "debug": "^4.1.0",
     "jenkins": "^0.20.1",
     "mustache": "^2.2.1",
     "shell-quote": "^1.6.1"
