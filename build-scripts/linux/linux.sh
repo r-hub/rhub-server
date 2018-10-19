@@ -116,14 +116,20 @@ make_uuid() {
 }
 
 check_requirements() {
-    # Check for R and the packages we need
-    if ! R --slave -e 'x <- 1' 2>/dev/null; then
+    # Check for Docker, R and the packages we need
+    if ! docker --version >/dev/null 2>/dev/null; then
+	>&2 echo "Cannot find Docker :("
+	>&2 echo "Make sure that Docker installed and it is in the PATH."
+	>&2 echo "You can install Docer from https://www.docker.com/"
+	return 1
+    fi
+    if ! R --slave -e 'x <- 1' >/dev/null 2>/dev/null; then
 	>&2 echo "Cannot find R :("
 	>&2 echo "Make sure that R installed and it is in the PATH"
 	>&2 echo "You can install R from https://cran.r-project.org/"
 	return 1
     fi
-    if ! R --slave -e 'library(sysreqs)' 2>/dev/null; then
+    if ! R --slave -e 'library(sysreqs)' >/dev/null 2>/dev/null; then
 	>&2 echo "Cannot load the sysreqs package :(  Install it with"
 	>&2 echo "R -q -e \"source('https://install-github.me/r-hub/sysreqs')\""
 	return 2
