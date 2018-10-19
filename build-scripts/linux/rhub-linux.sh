@@ -227,7 +227,7 @@ run_check() {
     docker create -i --user docker --env-file "$envfile" \
 	   --name "${container}-2" "$image" /bin/bash /tmp/build.sh \
 	   "/tmp/$basepackage"
-    docker cp linux-worker.sh "${container}-2:/tmp/build.sh"
+    docker cp rhub-linux-docker.sh "${container}-2:/tmp/build.sh"
     docker cp "$package" "${container}-2:/tmp/$basepackage"
     docker start -i -a "${container}-2"
 }
