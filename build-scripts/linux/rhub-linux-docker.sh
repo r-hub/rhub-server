@@ -1,8 +1,9 @@
 #! /bin/bash
 
-set -eu
 
 main() {
+
+    set -eu
 
     # The default might not be the home directory, but /
     cd ~

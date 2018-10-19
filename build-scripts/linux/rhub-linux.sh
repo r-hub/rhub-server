@@ -1,8 +1,7 @@
 #! /bin/bash
 
-set -eu
-
 main() {
+    set -eu
 
     # Global for the cleanup. We make this random, to make sure that
     # parallel build of the same package file, or parallel CI jobs
