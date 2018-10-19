@@ -64,6 +64,7 @@ build_package() {
 	return
     fi
 
+    echo
     echo ">>>>>==================== Running R CMD build"
     mkdir build
     (
@@ -78,6 +79,7 @@ build_package() {
 }
 
 install_remotes() {
+    echo
     echo ">>>>>==================== Installing remotes package"
     # Download the single file install script from r-lib/remotes
     # We cannot do this from R, because some R versions do not support
@@ -88,6 +90,7 @@ install_remotes() {
 }
 
 install_deps() {
+    echo
     echo ">>>>>==================== Installing package dependencies"
     declare -r package="$1"
 
@@ -106,6 +109,7 @@ install_deps() {
 }
 
 run_check() {
+    echo
     echo ">>>>>==================== Running R CMD check"
     declare -r package="$1"
 
@@ -115,7 +119,8 @@ run_check() {
     xvfb-run --server-args="-screen 0 1024x768x24" \
 	     $RHUB_CHECK_COMMAND "$package"
 
-    echo ">>>>>==================== Done with R CMD check"
+    echo
+    echo "<<<<<==================== Running R CMD check done"
 }
 
 [[ "$0" == "$BASH_SOURCE" ]] && main "$@"

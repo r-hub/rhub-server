@@ -9,14 +9,40 @@ main() {
     # do not interfere
     CONTAINER=$(make_uuid | tr -d -- '-')
     CLEANUPIMAGE=
-    CLEANUPFILES=()
+    CLEANUPFILES=('dummy')
     trap cleanup 0
 
-    # TODO: parse args
-    declare package="$1"
+    echo "R-hub Linux builder script v0.10.0 (c) R Consortium, 2018"
+    echo
+
+    # Parse arguments
     local image=rhub/debian-gcc-devel
-    local envvars=$(echo foo=bar; echo foo2=baz)
+    local envvars=""
     local checkargs=""
+    while getopts ":hi:e:c:" opt; do
+	case $opt in
+	    i)  image="$OPTARG"     ;;
+	    e)  envvars="$OPTARG"   ;;
+	    c)  checkargs="$OPTARG" ;;
+	    h)  help; exit 1        ;;
+	    \?) >&2 echo "Invalid option: -$OPTARG"; usage; exit 2  ;;
+	    :)  >&2 echo "Option -$OPTARG requires an argument. :(";
+		usage; exit 2 ;;
+	esac
+    done
+
+    shift $((OPTIND-1))
+    if (( $# != 1 )); then
+	>&2 echo "No package :( Specify one package fileor URL to build."
+	help
+	exit 3;
+    fi
+    declare package="$1"
+
+    echo Package: "$package"
+    echo Docker image: "$image"
+    echo Env vars: "$envvars"
+    echo R CMD check arguments: "$checkargs"
 
     check_requirements || exit $?
 
@@ -40,6 +66,25 @@ main() {
     get_artifacts $CONTAINER
 
     # Cleanup is automatic
+}
+
+usage() {
+    >&2 echo
+    >&2 echo "Usage: $0 [-h] [-i image] [-e env] [-c checkargs] package-file"
+    >&2 echo
+    >&2 echo "Options:"
+    >&2 echo "  -i image      Docker image to use [default: rhub/debian-gcc-devel]"
+    >&2 echo "  -e env        Environment variables to set, VAR=VALUE, newline separated"
+    >&2 echo "  -c checkargs  Arguments for 'R CMD check'"
+    >&2 echo "  -h            Print help message"
+}
+
+help() {
+    usage
+    >&2 echo
+    >&2 echo "Run 'R CMD check' on an R package, within a Docker container."
+    >&2 echo "'package-file' should be a local R source package, or an URL to one."
+    >&2 echo "Calls 'R CMD build' automatically, if needed."
 }
 
 make_bad_uuid()  {
@@ -90,6 +135,7 @@ download_package() {
     REPLY=$(mktemp).tar.gz
     CLEANUPFILES+=("$REPLY")
     if [[ "$package" =~ ^https?:// ]]; then
+	echo
 	echo ">>>>>==================== Downloading package file"
 	if ! wget -O "$REPLY" "$package"; then
 	    >&2 echo "Cannot download package file :("
@@ -125,6 +171,7 @@ install_sysreqs() {
 
     # Install them, if there is anything to install
     if [[ ! -z "${sysreqs}" ]]; then
+	echo
 	echo ">>>>>==================== Installing system requirements"
 	local sysreqsfile=$(mktemp)
 	CLEANUPFILES+=("$sysreqsfile")
@@ -166,6 +213,7 @@ create_env_file() {
 }
 
 run_check() {
+    echo
     echo ">>>>>==================== Starting Docker container"
     declare package="$1" image="$2" container="$3" envfile="$4"
     local basepackage=$(basename "$package")
@@ -214,8 +262,7 @@ cleanup() {
     docker rmi -f   "$CLEANUPIMAGE"  >/dev/null 2>/dev/null || true
 
     # Temp files
-    for i in "${CLEANUPFILES[@]}"
-    do
+    for i in ${CLEANUPFILES[@]}; do
 	rm -rf "$i" 2>/dev/null || true
     done
 }
