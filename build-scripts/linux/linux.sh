@@ -55,7 +55,7 @@ check_requirements() {
 
 download_package() {
     declare -r package="$1"
-    REPLY=$(basename $(tempfile).tar.gz)
+    REPLY=$(basename $(mktemp).tar.gz)
     if [[ "$package" =~ ^https?:// ]]; then
 	echo ">>>>>==================== Downloading package file"
 	if ! wget -O "$REPLY" "$package"; then
@@ -93,7 +93,7 @@ install_sysreqs() {
     # Install them, if there is anything to install
     if [[ ! -z "${sysreqs}" ]]; then
 	echo ">>>>>==================== Installing system requirements"
-	local sysreqsfile=$(tempfile)
+	local sysreqsfile=$(mktemp)
 	echo "${sysreqs}" > "$sysreqsfile"
 	docker create --user root --name "${container}-1" \
 	       "$image" bash /root/sysreqs.sh
@@ -109,7 +109,7 @@ install_sysreqs() {
 
 create_env_file() {
     declare -r package="$1" envvars="$2" checkargs="$3"
-    local envfile=$(tempfile)
+    local envfile=$(mktemp)
 
     # These can be overriden by the user supplied env vars
     echo R_REMOTES_STANDALONE=true              >> "$envfile"
