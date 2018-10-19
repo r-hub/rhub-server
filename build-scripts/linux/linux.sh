@@ -7,7 +7,7 @@ main() {
     # Global for the cleanup. We make this random, to make sure that
     # parallel build of the same package file, or parallel CI jobs
     # do not interfere
-    CONTAINER=$(cat /proc/sys/kernel/random/uuid | tr -d -- '-')
+    CONTAINER=$(make_uuid | tr -d -- '-')
     CLEANUPIMAGE=
     trap cleanup 0
 
@@ -39,6 +39,34 @@ main() {
     get_artifacts $CONTAINER
 
     # Cleanup is automatic
+}
+
+make_bad_uuid()  {
+    local N B C='89ab'
+    for (( N=0; N < 16; ++N ))
+    do
+	B=$(( $RANDOM%256 ))
+	case $N in
+	    6)
+		printf '4%x' $(( B%16 ))
+		;;
+	    8)
+		printf '%c%x' ${C:$RANDOM%${#C}:1} $(( B%16 ))
+		;;
+	    3 | 5 | 7 | 9)
+		printf '%02x-' $B
+		;;
+	    *)
+		printf '%02x' $B
+		;;
+	esac
+    done
+    echo
+}
+
+make_uuid() {
+    cat /proc/sys/kernel/random/uuid 2>/dev/null ||
+	uuidgen 2>/dev/null || make_bad_uuid
 }
 
 check_requirements() {
