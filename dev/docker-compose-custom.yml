@@ -1,0 +1,24 @@
+version: '3.3'
+
+# Want to have direct access to services, for debugging
+
+services:
+   frontend:
+     ports:
+     - "127.0.0.1:3000:3000"
+
+   redis:
+     ports:
+     - "127.0.0.1:3001:6379"
+
+   logdb:
+     ports:
+     - "127.0.0.1:3002:5984"
+
+   queue:
+     ports:
+     - "127.0.0.1:3003:5672"
+
+   jenkins:
+     ports:
+     - "127.0.0.1:8080:8080"

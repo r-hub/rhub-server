@@ -11,8 +11,6 @@ volumes:
 services:
    frontend:
      build: ./frontend
-     ports:
-     - "127.0.0.1:3000:3000"
      environment:
      - RABBITMQ_URL=${RABBITMQ_URL}
      - LOGDB_URL=${LOGDB_URL}
@@ -51,20 +49,14 @@ services:
      - jenkins
    redis:
      image: "redis:4.0.11-alpine"
-     ports:
-     - "127.0.0.1:3001:6379"
      volumes:
      - session-data:/data
    queue:
      image: "rabbitmq:3.7.8-alpine"
-     ports:
-     - "127.0.0.1:3003:5672"
      volumes:
      - queue-data:/var/lib/rabbitmq
    logdb:
      image: "couchdb:2.2"
-     ports:
-     - "127.0.0.1:3002:5984"
      volumes:
      - log-data:/opt/couchdb/data
    logdb-seed:
@@ -85,8 +77,6 @@ services:
      - JENKINS_ROOT_URL=${JENKINS_ROOT_URL}
      - JENKINS_USER=${JENKINS_USER}
      - JENKINS_PASSWORD=${JENKINS_PASSWORD}
-     ports:
-     - "127.0.0.1:8080:8080"
    linux-builder:
      hostname: linux-builder
      build: ./linux-builder
