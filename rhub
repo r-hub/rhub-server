@@ -1,0 +1,46 @@
+#! /bin/bash
+
+if [[ ! -z "$DOCKER_MACHINE_NAME"  ]]; then
+    echo "RHUB> Active Docker Machine: $DOCKER_MACHINE_NAME"
+else
+    echo "RHUB> No active Docker Machine"
+fi
+
+if [[ -f stack.yml ]]; then
+    echo "RHUB> Setting up base project"
+
+    set -a
+    . ./config.env
+    set +a
+
+    export COMPOSE_FILE=stack.yml
+    export COMPOSE_ARG="-c stack.yml"
+
+else
+    echo "RHUB> Setting up $(basename $(pwd)) project"
+
+    set -a
+    . ../config.env
+    if [[ -f config-custom.env  ]]; then . ./config-custom.env; fi
+    set +a
+
+    if [[ ! -f stack-custom.yml ]]; then
+	export COMPOSE_FILE="../stack.yml"
+	export COMPOSE_ARG="-c ../stack.yml"
+    else
+	export COMPOSE_PATH_SEPARATOR=":"
+	export COMPOSE_FILE="../stack.yml:stack-custom.yml"
+	export COMPOSE_ARG="-c ../stack.yml -c stack-custom.yml"
+    fi
+fi
+
+if [[ "$1" == "docker" && "$2" == "stack" &&  "$3" == "deploy" ]]; then
+    shift 3
+    echo "RHUB> Calling docker stack deploy $COMPOSE_ARG $@"
+    echo
+    docker stack deploy $COMPOSE_ARG "$@"
+else
+    echo "RHUB> Calling $@"
+    echo
+    "$@"
+fi

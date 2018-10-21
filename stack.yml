@@ -9,23 +9,25 @@ volumes:
    artifacts-data:
 
 services:
+
    frontend:
      build: ./frontend
+     image: "rhub/frontend:${RHUB_VERSION}"
      environment:
-     - RABBITMQ_URL=${RABBITMQ_URL}
-     - LOGDB_URL=${LOGDB_URL}
-     - REDIS_URL=${REDIS_URL}
-     - REDIS_EMAIL_URL=${REDIS_EMAIL_URL}
      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
      - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080
-     - RHUB_BUILDER_URL=http://frontend:3000
-     - RHUB_BUILDER_EXTERNAL_URL=${RHUB_BUILDER_EXTERNAL_URL}
-     - RHUB_ARTIFACTS_URL=${RHUB_ARTIFACTS_URL}
-     - RHUB_EMAIL_FROM=${RHUB_EMAIL_FROM}
-     - RHUB_EMAIL_MODE=${RHUB_EMAIL_MODE}
+     - LOGDB_URL=${LOGDB_URL}
      - MAILGUN_DOMAIN=${MAILGUN_DOMAIN}
      - MAILGUN_API_KEY=${MAILGUN_API_KEY}
+     - RABBITMQ_URL=${RABBITMQ_URL}
+     - REDIS_URL=${REDIS_URL}
+     - REDIS_EMAIL_URL=${REDIS_EMAIL_URL}
+     - RHUB_ARTIFACTS_URL=${RHUB_ARTIFACTS_URL}
+     - RHUB_BUILDER_EXTERNAL_URL=${RHUB_BUILDER_EXTERNAL_URL}
+     - RHUB_BUILDER_URL=http://frontend:3000
+     - RHUB_EMAIL_FROM=${RHUB_EMAIL_FROM}
+     - RHUB_EMAIL_MODE=${RHUB_EMAIL_MODE}
      - RHUB_SMTP_SERVER=${RHUB_SMTP_SERVER}
      - RHUB_SMTP_USERNAME=${RHUB_SMTP_USERNAME}
      - RHUB_SMTP_PASSWORD=${RHUB_SMTP_PASSWORD}
@@ -38,8 +40,10 @@ services:
      - queue
      - logdb
      - jenkins
+
    backend:
      build: ./backend
+     image: "rhub/backend:${RHUB_VERSION}"
      environment:
      - RABBITMQ_URL=${RABBITMQ_URL}
      - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080
@@ -47,20 +51,25 @@ services:
      depends_on:
      - queue
      - jenkins
+
    redis:
      image: "redis:4.0.11-alpine"
      volumes:
      - session-data:/data
+
    queue:
      image: "rabbitmq:3.7.8-alpine"
      volumes:
      - queue-data:/var/lib/rabbitmq
+
    logdb:
      image: "couchdb:2.2"
      volumes:
      - log-data:/opt/couchdb/data
+
    logdb-seed:
      build: ./seed
+     image: "rhub/seed:${RHUB_VERSION}"
      environment:
      - LOGDB_URL=${LOGDB_URL}
      entrypoint:
@@ -69,17 +78,21 @@ services:
      - /seed/logdb.sh
      depends_on:
      - logdb
+
    jenkins:
      build: ./jenkins
+     image: "rhub/jenkins:${RHUB_VERSION}"
      volumes:
      - jenkins-data:/var/jenkins_home
      environment:
      - JENKINS_ROOT_URL=${JENKINS_ROOT_URL}
      - JENKINS_USER=${JENKINS_USER}
      - JENKINS_PASSWORD=${JENKINS_PASSWORD}
+
    linux-builder:
      hostname: linux-builder
      build: ./linux-builder
+     image: "rhub/linux-builder:${RHUB_VERSION}"
      volumes:
      - /var/run/docker.sock:/var/run/docker.sock
      - artifacts-data:/artifacts
@@ -91,12 +104,16 @@ services:
      - JENKINS_LABELS=swarm linux
      - RHUB_CRAN_MIRROR=${RHUB_CRAN_MIRROR}
      - RHUB_ARTIFACTS=${RHUB_ARTIFACTS}
+
    cron:
      build: ./cron
+     image: "rhub/cron:${RHUB_VERSION}"
      environment:
      - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080
+
    nginx:
      build: ./nginx
+     image: "rhub/nginx:${RHUB_VERSION}"
      volumes:
      - artifacts-data:/artifacts:ro
      ports:

@@ -1,0 +1,25 @@
+version: '3.3'
+
+# Changes compared to base project:
+# - want to have direct access to services, for debugging
+
+services:
+   frontend:
+     ports:
+     - "3000:3000"
+
+   redis:
+     ports:
+     - "3001:6379"
+
+   logdb:
+     ports:
+     - "3002:5984"
+
+   queue:
+     ports:
+     - "3003:5672"
+
+   jenkins:
+     ports:
+     - "8080:8080"
