@@ -13,6 +13,10 @@ secrets:
     external: true
   nginx.key:
     external: true
+  jenkins.pass:
+    file: ./jenkins.pass
+  web.pass:
+    file: ./web.pass
 
 services:
 
@@ -22,7 +26,7 @@ services:
      environment:
      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
-     - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080
+     - JENKINS_URL=http://${JENKINS_USER}:<password>@jenkins:8080
      - LOGDB_URL=${LOGDB_URL}
      - MAILGUN_DOMAIN=${MAILGUN_DOMAIN}
      - MAILGUN_API_KEY=${MAILGUN_API_KEY}
@@ -46,17 +50,21 @@ services:
      - queue
      - logdb
      - jenkins
+     secrets:
+     - jenkins.pass
 
    backend:
      build: ./backend
      image: "rhub/backend:${RHUB_VERSION}"
      environment:
      - RABBITMQ_URL=${RABBITMQ_URL}
-     - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080
+     - JENKINS_URL=http://${JENKINS_USER}:<password>@jenkins:8080
      - RHUB_ARTIFACTS=${RHUB_ARTIFACTS}
      depends_on:
      - queue
      - jenkins
+     secrets:
+     - jenkins.pass
 
    redis:
      image: "redis:4.0.11-alpine"
@@ -93,7 +101,8 @@ services:
      environment:
      - JENKINS_ROOT_URL=${JENKINS_ROOT_URL}
      - JENKINS_USER=${JENKINS_USER}
-     - JENKINS_PASSWORD=${JENKINS_PASSWORD}
+     secrets:
+     - jenkins.pass
 
    linux-builder:
      hostname: linux-builder
@@ -105,17 +114,20 @@ services:
      environment:
      - JENKINS_URL=http://jenkins:8080
      - JENKINS_USER=${JENKINS_USER}
-     - JENKINS_PASSWORD=${JENKINS_PASSWORD}
      - RHUB_EXECUTORS=4
      - JENKINS_LABELS=swarm linux
      - RHUB_CRAN_MIRROR=${RHUB_CRAN_MIRROR}
      - RHUB_ARTIFACTS=${RHUB_ARTIFACTS}
+     secrets:
+     - jenkins.pass
 
    cron:
      build: ./cron
      image: "rhub/cron:${RHUB_VERSION}"
      environment:
-     - JENKINS_URL=http://${JENKINS_USER}:${JENKINS_PASSWORD}@jenkins:8080
+     - JENKINS_URL=http://${JENKINS_USER}:<password>@jenkins:8080
+     secrets:
+     - jenkins.pass
 
    nginx:
      build: ./nginx

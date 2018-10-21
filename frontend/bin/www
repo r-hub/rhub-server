@@ -1,6 +1,21 @@
 #!/usr/bin/env node
 
 /**
+ * Get the secrets from Docker Swarm
+ */
+var fs = require('fs');
+
+var jenkins_url = process.env.JENKINS_URL;
+try {
+  var jenkins_pass = fs.readFileSync("/run/secrets/jenkins.pass", 'utf8')
+      .trim();
+  jenkins_url = jenkins_url.replace("<password>", jenkins_pass);
+} catch (e) {
+  console.log("No jenkins.pass secret, JENKINS_URL is used as is");
+}
+process.env.JENKINS_URL = jenkins_url;
+
+/**
  * Module dependencies.
  */
 

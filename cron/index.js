@@ -1,9 +1,17 @@
 var CronJob = require('cron').CronJob;
 var jenkins = require('jenkins');
 var async = require('async');
+var fs = require('fs');
 
-var jenkins_url = process.env.JENKINS_URL ||
-    'http://admin:2eea3b927d4ee23e@jenkins.rhub.me:8080';
+var jenkins_url = process.env.JENKINS_URL;
+
+try {
+  var jenkins_pass = fs.readFileSync("/run/secrets/jenkins.pass", 'utf8')
+      .trim();
+  jenkins_url = jenkins_url.replace("<password>", jenkins_pass);
+} catch (e) {
+  console.log("No jenkins.pass secret, JENKINS_URL is used as is");
+}
 
 // Time limit to delete job
 var TIME_LIMIT = 1000 /* ms */ * 60 /* s */ * 60 /* min */ * 24 * 3;

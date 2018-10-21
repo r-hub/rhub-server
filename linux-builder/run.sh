@@ -2,6 +2,8 @@
 
 chgrp docker /var/run/docker.sock
 
+export  JENKINS_PASSWORD="$(cat /run/secrets/jenkins.pass)"
+
 cd ~jenkins
 
 cat >jenkins.sh  <<EOF
