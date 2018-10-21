@@ -15,3 +15,6 @@ services:
    nginx:
      environment:
      - RHUB_HTTPS=${RHUB_HTTPS}
+     secrets:
+     - nginx.crt
+     - nginx.key

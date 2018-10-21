@@ -131,6 +131,3 @@ services:
      - sh
      - -c
      - /entrypoint.sh
-     secrets:
-     - nginx.crt
-     - nginx.key
