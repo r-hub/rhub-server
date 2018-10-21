@@ -11,6 +11,12 @@ http {
     ssl_session_timeout 10m;
 
     server {
+       listen      80;
+       access_log  off;
+       return 301  https://${DOLLAR}host${DOLLAR}request_uri;
+    }
+
+    server {
         listen 443 ssl;
         keepalive_timeout   70;
     

@@ -1,6 +1,4 @@
 
-set
-
 export DOLLAR="$"
 if [ "x$RHUB_HTTPS" == "xtrue" ]; then
     echo "Installing HTTPS nginx config"
