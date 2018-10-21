@@ -8,6 +8,12 @@ volumes:
    jenkins-data:
    artifacts-data:
 
+secrets:
+  nginx.crt:
+    external: true
+  nginx.key:
+    external: true
+
 services:
 
    frontend:
@@ -117,10 +123,14 @@ services:
      volumes:
      - artifacts-data:/artifacts:ro
      ports:
-     - 80:80
+     - "80:80"
+     - "443:443"
      depends_on:
      - frontend
      entrypoint:
      - sh
      - -c
-     - 'wait-for frontend:3000 -- nginx -g "daemon off;"'
+     - /entrypoint.sh
+     secrets:
+     - nginx.crt
+     - nginx.key

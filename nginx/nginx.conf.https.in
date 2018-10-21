@@ -1,0 +1,40 @@
+
+user nginx;
+
+events {
+    worker_connections 768;
+}
+
+http {
+
+    ssl_session_cache   shared:SSL:10m;
+    ssl_session_timeout 10m;
+
+    server {
+        listen 443 ssl;
+        keepalive_timeout   70;
+    
+        ssl_certificate     /run/secrets/nginx.crt;
+        ssl_certificate_key /run/secrets/nginx.key;
+        ssl_protocols       TLSv1.1 TLSv1.2;
+
+        location ~ ^/artifacts/?${DOLLAR} {
+	    root /;
+	    autoindex off;
+        }
+
+        location ~ /artifacts/.*  {
+            root /;
+	    autoindex on;
+            sendfile on;
+            sendfile_max_chunk 1m;
+        }
+
+	location / {
+            proxy_pass http://frontend:3000;
+            proxy_set_header Host ${DOLLAR}host;
+            proxy_set_header X-Real-IP ${DOLLAR}remote_addr;
+            proxy_set_header X-Forwarded-For ${DOLLAR}proxy_add_x_forwarded_for;
+        }
+    }
+}
