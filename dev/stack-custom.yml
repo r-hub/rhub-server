@@ -19,3 +19,7 @@ services:
    queue:
      ports:
      - "3003:5672"
+
+   jenkins:
+     ports:
+     - "8080:8080"

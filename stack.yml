@@ -26,7 +26,7 @@ services:
      environment:
      - GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
      - GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
-     - JENKINS_URL=http://${JENKINS_USER}:<password>@jenkins:8080
+     - JENKINS_URL=http://${JENKINS_USER}:<password>@jenkins:8080/jenkins
      - LOGDB_URL=${LOGDB_URL}
      - MAILGUN_DOMAIN=${MAILGUN_DOMAIN}
      - MAILGUN_API_KEY=${MAILGUN_API_KEY}
@@ -58,7 +58,7 @@ services:
      image: "rhub/backend:${RHUB_VERSION}"
      environment:
      - RABBITMQ_URL=${RABBITMQ_URL}
-     - JENKINS_URL=http://${JENKINS_USER}:<password>@jenkins:8080
+     - JENKINS_URL=http://${JENKINS_USER}:<password>@jenkins:8080/jenkins
      - RHUB_ARTIFACTS=${RHUB_ARTIFACTS}
      depends_on:
      - queue
@@ -92,6 +92,9 @@ services:
      - /seed/logdb.sh
      depends_on:
      - logdb
+     deploy:
+       restart_policy:
+         condition: on-failure
 
    jenkins:
      build: ./jenkins
@@ -101,6 +104,7 @@ services:
      environment:
      - JENKINS_ROOT_URL=${JENKINS_ROOT_URL}
      - JENKINS_USER=${JENKINS_USER}
+     - JENKINS_OPTS="--prefix=/jenkins"
      secrets:
      - jenkins.pass
      ports:
@@ -114,12 +118,13 @@ services:
      - /var/run/docker.sock:/var/run/docker.sock
      - artifacts-data:/artifacts
      environment:
-     - JENKINS_URL=http://jenkins:8080
+     - JENKINS_URL=http://jenkins:8080/jenkins
      - JENKINS_USER=${JENKINS_USER}
      - RHUB_EXECUTORS=4
      - JENKINS_LABELS=swarm linux
      - RHUB_CRAN_MIRROR=${RHUB_CRAN_MIRROR}
      - RHUB_ARTIFACTS=${RHUB_ARTIFACTS}
+     - RHUB_BUILDER_URL=http://frontend:3000
      secrets:
      - jenkins.pass
 
@@ -127,7 +132,7 @@ services:
      build: ./cron
      image: "rhub/cron:${RHUB_VERSION}"
      environment:
-     - JENKINS_URL=http://${JENKINS_USER}:<password>@jenkins:8080
+     - JENKINS_URL=http://${JENKINS_USER}:<password>@jenkins:8080/jenkins
      secrets:
      - jenkins.pass
 
@@ -139,9 +144,9 @@ services:
      ports:
      - "80:80"
      - "443:443"
-     - "8080:8080"
      depends_on:
      - frontend
+     - jenkins
      entrypoint:
      - sh
      - -c
