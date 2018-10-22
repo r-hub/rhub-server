@@ -103,6 +103,8 @@ services:
      - JENKINS_USER=${JENKINS_USER}
      secrets:
      - jenkins.pass
+     ports:
+     - 50000:50000
 
    linux-builder:
      hostname: linux-builder
@@ -137,6 +139,7 @@ services:
      ports:
      - "80:80"
      - "443:443"
+     - "8080:8080"
      depends_on:
      - frontend
      entrypoint:

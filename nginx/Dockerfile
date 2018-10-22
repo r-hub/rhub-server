@@ -14,5 +14,6 @@ RUN apk add --no-cache gettext
 
 COPY nginx.conf.in /etc/nginx/nginx.conf.in
 COPY nginx.conf.https.in /etc/nginx/nginx.conf.https.in
-
+COPY jenkins.conf.in /etc/nginx/jenkins.conf.in
+COPY jenkins.conf.https.in /etc/nginx/jenkins.conf.https.in
 COPY entrypoint.sh /entrypoint.sh
