@@ -42,13 +42,14 @@ function add_jenkins_job(conn, job, callback) {
 
 function build_jenkins_job(conn, job, callback) {
     var job_name = jenkins_job_name(job);
+    var env_vars = flatten_env_vars(job.envVars, job.ostype !== "Linux");
     var parameters = {
         'package': job.package,
         'filename': job.filename,
         'url': job.url,
         'image': job.image || "",
         'checkArgs': job.checkArgs || "",
-        'envVars': flatten_env_vars(job.envVars) || "",
+        'envVars': env_vars || "",
         'rversion': job.rversion || "r-release",
         'startPingUrl': job.builder + '/build/in-progress/' + job_name,
         'endPingUrl': job.builder + '/build',
@@ -66,13 +67,18 @@ function build_jenkins_job(conn, job, callback) {
     )
 }
 
-function flatten_env_vars(x) {
+function flatten_env_vars(x, should_quote) {
     if (x === null || x === undefined || x === "") return(null);
     return Object.keys(x)
         .map(function(key) {
 	    var k = String(key);
 	    var v = String(x[key]);
-	    return quote([k]) + "=" + quote([v]); })
+	    if (should_quote) {
+		return quote([k]) + "=" + quote([v]);
+	    } else {
+		return k + "=" + v;
+	    }
+	})
         .join("\n");
 }
 
