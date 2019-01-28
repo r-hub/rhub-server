@@ -15,7 +15,7 @@ function update_log(id, state, time, body, callback) {
 	body.build_time = new Date() - new Date(body.started);
 	body.builder_machine = data.builtOn;
 
-	jenkins.build.log(id, 'lastBuild', function(err, log) {
+	jenkins.build.log('Jobs/' + id, 'lastBuild', function(err, log) {
 	    if (err) { return callback("Cannot get Jenkins log"); }
 	    var parsed = parse_rhub_log(body.platform["output-parser"], log);
 	    body.result = parsed.result;

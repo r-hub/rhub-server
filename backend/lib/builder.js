@@ -30,7 +30,7 @@ function add_jenkins_job(conn, job, callback) {
     jenkins_xml(job, function(err, job_xml) {
 	if (err) { callback(err); return; }
 	conn.job.create(
-	    job_name,
+	    'Jobs/' + job_name,
 	    job_xml,
 	    function(err) {
 		if (err) { console.log(err); callback(err); return; }
@@ -58,7 +58,7 @@ function build_jenkins_job(conn, job, callback) {
     };
   
     conn.job.build(
-        job_name,
+        'Jobs/' + job_name,
         { 'parameters': parameters },
         function(err) {
 	    if (err) { console.log(err); callback(err); return; }

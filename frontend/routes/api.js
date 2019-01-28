@@ -328,7 +328,7 @@ router.get(
 	var name = req.params[0];
 	var start = req.query.start || 0;
 
-	var options = { 'name': name,
+	var options = { 'name': 'Jobs/' + name,
 			'number': 1,
 			'start': start,
 			'meta': true };

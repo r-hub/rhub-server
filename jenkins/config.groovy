@@ -63,3 +63,58 @@ public createGlobalEnvironmentVariables(String key, String value) {
 }
 
 createGlobalEnvironmentVariables('PS4','+R-HUB-R-HUB-R-HUB')
+
+// Create Folders
+def jobs_str = '''
+<com.cloudbees.hudson.plugins.folder.Folder plugin="cloudbees-folder@6.7">
+  <description>User submitted builds.</description>
+  <properties/>
+  <folderViews class="com.cloudbees.hudson.plugins.folder.views.DefaultFolderViewHolder">
+    <views>
+      <hudson.model.AllView>
+        <owner class="com.cloudbees.hudson.plugins.folder.Folder" reference="../../../.."/>
+        <name>All</name>
+        <filterExecutors>false</filterExecutors>
+        <filterQueue>false</filterQueue>
+        <properties class="hudson.model.View$PropertyList"/>
+      </hudson.model.AllView>
+    </views>
+    <tabBar class="hudson.views.DefaultViewsTabBar"/>
+  </folderViews>
+  <healthMetrics>
+    <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+      <nonRecursive>false</nonRecursive>
+    </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+  </healthMetrics>
+  <icon class="com.cloudbees.hudson.plugins.folder.icons.StockFolderIcon"/>
+</com.cloudbees.hudson.plugins.folder.Folder>
+'''
+def jobs_stream = new ByteArrayInputStream(jobs_str.getBytes())
+Jenkins.instance.createProjectFromXML('Jobs', jobs_stream)
+
+def manage_str = '''
+<com.cloudbees.hudson.plugins.folder.Folder plugin="cloudbees-folder@6.7">
+  <description>Internal jobs for  R-hub.</description>
+  <properties/>
+  <folderViews class="com.cloudbees.hudson.plugins.folder.views.DefaultFolderViewHolder">
+    <views>
+      <hudson.model.AllView>
+        <owner class="com.cloudbees.hudson.plugins.folder.Folder" reference="../../../.."/>
+        <name>All</name>
+        <filterExecutors>false</filterExecutors>
+        <filterQueue>false</filterQueue>
+        <properties class="hudson.model.View$PropertyList"/>
+      </hudson.model.AllView>
+    </views>
+    <tabBar class="hudson.views.DefaultViewsTabBar"/>
+  </folderViews>
+  <healthMetrics>
+    <com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+      <nonRecursive>false</nonRecursive>
+    </com.cloudbees.hudson.plugins.folder.health.WorstChildHealthMetric>
+  </healthMetrics>
+  <icon class="com.cloudbees.hudson.plugins.folder.icons.StockFolderIcon"/>
+</com.cloudbees.hudson.plugins.folder.Folder>
+'''
+def manage_stream = new ByteArrayInputStream(manage_str.getBytes())
+Jenkins.instance.createProjectFromXML('Management', manage_stream)

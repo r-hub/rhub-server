@@ -42,7 +42,7 @@ router.get(new RegExp('^/log/' + re_status + '$'), function(req, res) {
     var name = req.params[0];
     var log = new JenkinsLogStream({
 	'baseUrl': urls.jenkins,
-	'job': name
+	'job': 'Jobs/job/' + name
     });
 
     res.header("Content-Type", "text/html; charset=utf-8")
@@ -60,7 +60,7 @@ router.get(new RegExp('^/embedded/' + re_status + '$'), function(req, res) {
     var name = req.params[0];
     var log = new JenkinsLogStream({
 	'baseUrl': urls.jenkins,
-	'job': name
+	'job': 'Jobs/job/' + name
     });
 
     res.header("Content-Type", "text/html; charset=utf-8")
@@ -72,7 +72,7 @@ router.get(new RegExp('^/raw/' + re_status + '$'), function(req, res) {
     var name = req.params[0];
     var log = new JenkinsLogStream({
 	'baseUrl': urls.jenkins,
-	'job': name
+	'job': 'Jobs/job/' + name
     });
     var simpleLogFilter = new SimpleLogFilter();
 
@@ -84,7 +84,7 @@ router.get(new RegExp('^/original/' + re_status + '$'), function(req, res) {
     var name = req.params[0];
     var log = new JenkinsLogStream({
 	'baseUrl': urls.jenkins,
-	'job': name
+	'job': 'Jobs/job/' + name
     });
 
     res.header("Content-Type", "text/plain")
