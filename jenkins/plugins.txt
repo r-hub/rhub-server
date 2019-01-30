@@ -5,3 +5,4 @@ publish-over-ssh:1.20.1
 swarm:3.15
 build-timeout:1.19
 cloudbees-folder:6.7
+ws-cleanup:0.37
