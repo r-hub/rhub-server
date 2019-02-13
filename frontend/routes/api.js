@@ -148,6 +148,7 @@ function valid_submission1(hash, platform, data_orig, req, filename, callback) {
     data.platform = platform;
 
     var originalname = data.package + '_' + data.version + '.tar.gz';
+    var groupid = originalname + "-" + filename;
     var id = originalname + '-' + hash;
     var baseurl = process.env.RHUB_BUILDER_URL ||
 	req.protocol + '://' + req.get('host');
@@ -164,6 +165,7 @@ function valid_submission1(hash, platform, data_orig, req, filename, callback) {
 	    'buildId': id,
 	    'package': originalname,
 	    'filename': filename,
+	    'group': groupid,
 	    'url': url,
 	    'size': null,
 	    'email': data.email,
