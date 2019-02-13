@@ -10,15 +10,15 @@ var cli_client = null;
 var text_body = multiline(function() { /*
 Dear R package developer!
 
-This is your verification code for your r-hub builder upload: ${code}
+This is your verification code for your R-hub builder upload: ${code}
 
-If you haven't uploaded anything to r-hub, please ignore this email.
+If you haven't uploaded anything to R-hub, please ignore this email.
 
 Please reply to this email or contact support@rhub.io if you have
 questions.
 
 Sincerely,
-The r-hub team
+The R-hub team
 
 */ });
 
@@ -40,9 +40,9 @@ function mail_verification_code(req, callback) {
 	req.session.verification = code;
 
 	var mail = {
-	    from: '"r-hub builder" <support@rhub.io>',
+	    from: '"R-hub builder" <support@rhub.io>',
 	    to: req.session.job.email,
-	    subject: 'r-hub builder verification',
+	    subject: 'R-hub builder verification',
 	    text: text_body.replace("${code}", code)
 	};
 
