@@ -9,7 +9,15 @@
     },
     "stats": {
       "map": "function (doc) {\n  emit(\n    doc.submitted,\n    { email: doc.email,\n      package: doc.package,\n      platform: doc.platform.name,\n      status: doc.status,\n      submitted: doc.submitted,\n      started: doc.started,\n      build_time: doc.build_time\n    });\n}\n"
-    }
+    },
+    "group": {
+      "map": "function(doc) {\n  if (!!doc.group) {\n    emit([doc.email, doc.submitted, doc.group], doc.id );\n  } else {\n    emit([doc.email, doc.submitted, doc.id], doc.id);\n  }\n}\n",
+      "reduce": "function(keys, vals, re) {\n  var a;\n\n  var key = keys[0][2];\n  for (a = 0; a < keys.length; a++)\n    if (keys[a][2] !== key)\n      return null;\n\n  var result = [];\n  for (a = 0; a < vals.length; a++)\n    if (vals[a]) {\n      result.push(vals[a]);\n    }\n  return result;\n}\n\n}\n"
+    },
+    "grouppackage": {
+      "map": "function(doc) {\n  if (!!doc.group) {\n    emit([doc.email, doc.package, doc.submitted, doc.group], doc.id );\n  } else {\n    emit([doc.email, doc.package, doc.submitted, doc.id], doc.id);\n  }\n}\n",
+      "reduce": "function(keys, vals, re) {\n  var a;\n\n  var key = keys[0][3];\n  for (a = 0; a < keys.length; a++)\n    if (keys[a][3] !== key)\n      return null;\n\n  var result = [];\n  for (a = 0; a < vals.length; a++)\n    if (vals[a]) {\n      result.push(vals[a]);\n    }\n  return result;\n}\n"
+    },
   },
   "rewrites": [
     {
@@ -41,6 +49,40 @@
 	],
 	"descending": "true"
       }
+    },
+    {
+	"from": "/-/group/email/:email",
+	"to": "_view/group",
+	"query": {
+            "start_key": [
+		":email",
+		{
+		}
+            ],
+            "end_key": [
+		":email"
+            ],
+            "descending": "true",
+            "group": "true"
+	}
+    },
+    {
+	"from": "/-/group/package/:email/:package",
+	"to": "_view/grouppackage",
+	"query": {
+            "start_key": [
+		":email",
+		":package",
+		{
+		}
+            ],
+            "end_key": [
+		":email",
+		":package"
+            ],
+            "descending": "true",
+            "group": "true"
+	}
     }
   ]
 }
