@@ -148,6 +148,24 @@ Function Install-Aspell {
     & "$spellfile" /VERYSILENT /NORESTART /NOCANCEL
 }
 
+Function Install-Jags {
+    $jagsurl = "https://files.r-hub.io/jags/jags-4.3.0.zip"
+    $jagsfile  = "$LocalTempDir\jags-4.3.0.zip"
+
+    Download "$jagsurl" "$jagsfile"
+
+    $xdir = "c:/R/jags"
+    mkdir "$xdir"
+    & 'c:\rtools34\bin\unzip.exe' "$jagsfile" -d "$xdir"
+
+    $mv = "c:\R\Makevars.win"
+    $mv64 = "c:\R\Makevars.win64"
+    "JAGS_ROOT=c:/R/jags/JAGS-4.3.0" | AC "$mv"
+    "JAGS_ROOT=c:/R/jags/JAGS-4.3.0" | AC "$mv64"
+
+    SETX JAGS_HOME "c:/R/jags/JAGS-4.3.0" /M
+}
+
 Function Get-Jenkins {
     $swarmversion = "3.9"
     $swarmurl = "https://repo.jenkins-ci.org/releases/org/jenkins-ci/plugins/swarm-client/$swarmversion/swarm-client-$swarmversion.jar"
@@ -228,3 +246,5 @@ Install-Aspell
 Get-Jenkins
 Get-LocalSoft
 Get-Scripts
+
+Install-Jags
