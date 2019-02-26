@@ -203,9 +203,9 @@ Function Get-LocalSoft {
     "SYMPHONY_HOME=c:/R/symphony64"      | AC "$mv64"
     "DLLFLAGS+=-Lc:/R/local330/lib/x64"  | AC "$mv64"
 
-    SETX LOCAL_SOFT c:\R\local330
-    SETX R_MAKEVARS_WIN "$mv"
-    SETX R_MAKEVARS_WIN64 "$mv64"
+    SETX LOCAL_SOFT c:\R\local330 /M
+    SETX R_MAKEVARS_WIN "$mv"     /M
+    SETX R_MAKEVARS_WIN64 "$mv64" /M
 }
 
 Function Get-Scripts {
