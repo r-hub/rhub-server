@@ -237,7 +237,7 @@ Function Install-Perl {
 
     Download "$perlurl" "$perlfile"
 
-    & "$perlfile" /VERYSILENT /NORESTART /NOCANCEL
+    MSIEXEC /I $perlfile /passive
 }
 
 Updates-Off
