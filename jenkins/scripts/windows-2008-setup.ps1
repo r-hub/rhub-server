@@ -231,6 +231,23 @@ Function Get-Scripts {
     cp c:\users\rhub\wincheck\*.ps1 c:\users\rhub\documents\
 }
 
+Function Install-Rtools40 {
+    # Experimental Rtools40 installation
+    $rtoolsurl = "https://dl.bintray.com/rtools/installer/rtools40-x86_64.exe"
+    $rtoolsfile = "$LocalTempDir\rtools40-x86_64.exe"
+    Download "$rtoolsurl" "$rtoolsfile"
+    Start-Process -FilePath "$rtoolsfile" -ArgumentList /VERYSILENT -NoNewWindow -Wait
+
+    # Rtools40 path is hardcoded in R-testing for now
+    # setx path "$c:\rtools40\usr\bin"
+
+    # Special build of R for Rtools40
+    $TestingUrl    = "https://dl.bintray.com/rtools/installer/R-testing-win.exe"
+    $TestingFile   = "$LocalTempDir\R-testing-win.exe"
+    Download "$TestingUrl"   "$TestingFile"
+    Start-Process -FilePath "$TestingFile" -ArgumentList "/VERYSILENT" -NoNewWindow -Wait
+}
+
 Updates-Off
 Set-Timezone
 
