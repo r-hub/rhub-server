@@ -31,6 +31,8 @@ Function Install-Git {
 
     start-process "$gitfile" -argumentlist `
       "/VERYSILENT","/NORESTART","/NOCANCEL","/SP-","/CLOSEAPPLICATIONS","/RESTARTAPPLICATIONS","/COMPONENTS=`"icons,ext\reg\shellhere,assoc,assoc_sh`"" -wait
+
+    $env:path = "C:\Program Files\Git\bin;$env:path"
 }
 
 Function Install-Java {
