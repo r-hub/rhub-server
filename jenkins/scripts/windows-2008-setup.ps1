@@ -100,6 +100,16 @@ Function Install-R {
     Start-Process -FilePath "$DevelFile"   -ArgumentList "/VERYSILENT" -NoNewWindow -Wait
 }
 
+Function Install-7zip {
+    $zipurl = "https://www.7-zip.org/a/7z1900-x64.msi"
+    $zipfile = "$LocalTempDir\7zip.msi"
+    Download  "$zipurl" "$zipfile"
+
+    msiexec /i "$zipfile" /q INSTALLDIR="C:\Program Files\7-Zip"
+
+    $env:path = "C:\Program Files\7-Zip;$env:path"
+}
+
 Function Install-Rtools {
     $rtoolsver = $(Invoke-WebRequest ($CRAN + "/bin/windows/Rtools/VERSION.txt")).Content.Split(' ')[2].Split('.')[0..1] -Join ''
     $rtoolsurl = $CRAN + "/bin/windows/Rtools/Rtools$rtoolsver.exe"
@@ -108,9 +118,6 @@ Function Install-Rtools {
     Download "$rtoolsurl" "$rtoolsfile"
 
     Start-Process -FilePath "$rtoolsfile" -ArgumentList /VERYSILENT -NoNewWindow -Wait
-
-    # TODO: this should update, really....
-    setx path "c:\rtools34\bin"
 }
 
 Function Install-Latex {
@@ -119,8 +126,10 @@ Function Install-Latex {
     Download $latexurl $latexfile
     $xdir = "$LocalTempDir\miktex"
     mkdir "$xdir" -force
-    & 'c:\rtools34\bin\unzip.exe' "$latexfile" -d "$xdir"
-    & "$xdir\miktexsetup.exe" --quiet  --package-set=complete download
+    $repo = "https://ctan.math.illinois.edu/systems/win32/miktex/tm/packages/"
+    & 7z x "$latexfile" -o"$xdir"
+    & "$xdir\miktexsetup.exe" --quiet  --package-set=complete `
+      "--remote-package-repository=$repo" download
     & "$xdir\miktexsetup.exe" --quiet  --package-set=complete install
 }
 
@@ -135,8 +144,8 @@ Function Install-Pandoc {
 
     $xdir = "$LocalTempDir\pandoc"
     mkdir "$xdir" -force
-    & 'c:\rtools34\bin\unzip.exe' -o "$file1" -d "$xdir"
-    & 'c:\rtools34\bin\unzip.exe' -o "$file2" -d "$xdir"
+    & 7z x "$file1" -o"$xdir"
+    & 7z x "$file2" -o"$xdir"
 
     cp "$xdir\*.exe" c:\windows\
 }
@@ -158,7 +167,7 @@ Function Install-Jags {
 
     $xdir = "c:/R/jags"
     mkdir "$xdir"  -force
-    & 'c:\rtools34\bin\unzip.exe' "$jagsfile" -d "$xdir"
+    & 7z x "$jagsfile" -o"$xdir"
 
     $mv = "c:\R\Makevars.win"
     $mv64 = "c:\R\Makevars.win64"
@@ -256,6 +265,7 @@ Set-Timezone
 Install-Git
 Install-Java
 Install-Chrome
+Install-7zip
 Install-R
 Install-Rtools
 Install-Latex
