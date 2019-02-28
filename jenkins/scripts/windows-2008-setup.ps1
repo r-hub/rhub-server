@@ -108,7 +108,7 @@ Function Install-Rtools {
     Start-Process -FilePath "$rtoolsfile" -ArgumentList /VERYSILENT -NoNewWindow -Wait
 
     # TODO: this should update, really....
-    setx path "$c:\rtools34\bin"
+    setx path "c:\rtools34\bin"
 }
 
 Function Install-Latex {
