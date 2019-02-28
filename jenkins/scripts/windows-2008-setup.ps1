@@ -116,7 +116,7 @@ Function Install-Latex {
     $latexfile = "$LocalTempDir\miktex.xip"
     Download $latexurl $latexfile
     $xdir = "$LocalTempDir\miktex"
-    mkdir "$xdir"
+    mkdir "$xdir" -force
     & 'c:\rtools34\bin\unzip.exe' "$latexfile" -d "$xdir"
     & "$xdir\miktexsetup.exe" --quiet  --package-set=complete download
     & "$xdir\miktexsetup.exe" --quiet  --package-set=complete install
@@ -132,7 +132,7 @@ Function Install-Pandoc {
     Download "$url2" "$file2"
 
     $xdir = "$LocalTempDir\pandoc"
-    mkdir "$xdir"
+    mkdir "$xdir" -force
     & 'c:\rtools34\bin\unzip.exe' -o "$file1" -d "$xdir"
     & 'c:\rtools34\bin\unzip.exe' -o "$file2" -d "$xdir"
 
@@ -155,7 +155,7 @@ Function Install-Jags {
     Download "$jagsurl" "$jagsfile"
 
     $xdir = "c:/R/jags"
-    mkdir "$xdir"
+    mkdir "$xdir"  -force
     & 'c:\rtools34\bin\unzip.exe' "$jagsfile" -d "$xdir"
 
     $mv = "c:\R\Makevars.win"
