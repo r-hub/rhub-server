@@ -144,8 +144,8 @@ Function Install-Pandoc {
 
     $xdir = "$LocalTempDir\pandoc"
     mkdir "$xdir" -force
-    & 7z x "$file1" -o"$xdir"
-    & 7z x "$file2" -o"$xdir"
+    & 7z x "$file1" -aoa -o"$xdir"
+    & 7z x "$file2" -aoa -o"$xdir"
 
     cp "$xdir\*.exe" c:\windows\
 }
