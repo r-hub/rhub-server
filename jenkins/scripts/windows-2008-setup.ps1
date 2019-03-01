@@ -259,6 +259,13 @@ Function Install-Rtools40 {
     Start-Process -FilePath "$TestingFile" -ArgumentList "/VERYSILENT" -NoNewWindow -Wait
 }
 
+Function Update-Rtools40 {
+    & C:\rtools40\usr\bin\pacman --noconfirm -Syyu
+    & C:\rtools40\usr\bin\bash.exe --login -c `
+      'pacman -S --needed --noconfirm $(pacman -Slq | grep mingw-w64-)'
+}
+
+
 Updates-Off
 Set-Timezone
 
