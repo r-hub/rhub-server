@@ -242,6 +242,15 @@ Function Get-Scripts {
     cp c:\users\rhub\wincheck\*.ps1 c:\users\rhub\documents\
 }
 
+Function Install-Perl {
+    $perlurl = "http://strawberryperl.com/download/5.28.1.1/strawberry-perl-5.28.1.1-64bit.msi"
+    $perlfile = "$LocalTempDir\strawberry-perl-5.28.1.1-64bit.msi"
+
+    Download "$perlurl" "$perlfile"
+
+    MSIEXEC /I $perlfile /passive
+}
+
 Function Install-Rtools40 {
     # Experimental Rtools40 installation
     $rtoolsurl = "https://dl.bintray.com/rtools/installer/rtools40-x86_64.exe"
@@ -278,6 +287,7 @@ Install-Rtools
 Install-Latex
 Install-Pandoc
 Install-Aspell
+Install-Perl
 
 Get-Jenkins
 Get-LocalSoft
