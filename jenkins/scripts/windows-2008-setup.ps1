@@ -31,6 +31,8 @@ Function Install-Git {
 
     start-process "$gitfile" -argumentlist `
       "/VERYSILENT","/NORESTART","/NOCANCEL","/SP-","/CLOSEAPPLICATIONS","/RESTARTAPPLICATIONS","/COMPONENTS=`"icons,ext\reg\shellhere,assoc,assoc_sh`"" -wait
+
+    $env:path = "C:\Program Files\Git\bin;$env:path"
 }
 
 Function Install-Java {
@@ -98,6 +100,16 @@ Function Install-R {
     Start-Process -FilePath "$DevelFile"   -ArgumentList "/VERYSILENT" -NoNewWindow -Wait
 }
 
+Function Install-7zip {
+    $zipurl = "https://www.7-zip.org/a/7z1900-x64.msi"
+    $zipfile = "$LocalTempDir\7zip.msi"
+    Download  "$zipurl" "$zipfile"
+
+    msiexec /i "$zipfile" /q INSTALLDIR="C:\Program Files\7-Zip"
+
+    $env:path = "C:\Program Files\7-Zip;$env:path"
+}
+
 Function Install-Rtools {
     $rtoolsver = $(Invoke-WebRequest ($CRAN + "/bin/windows/Rtools/VERSION.txt")).Content.Split(' ')[2].Split('.')[0..1] -Join ''
     $rtoolsurl = $CRAN + "/bin/windows/Rtools/Rtools$rtoolsver.exe"
@@ -106,9 +118,6 @@ Function Install-Rtools {
     Download "$rtoolsurl" "$rtoolsfile"
 
     Start-Process -FilePath "$rtoolsfile" -ArgumentList /VERYSILENT -NoNewWindow -Wait
-
-    # TODO: this should update, really....
-    setx path "$c:\rtools34\bin"
 }
 
 Function Install-Latex {
@@ -116,9 +125,11 @@ Function Install-Latex {
     $latexfile = "$LocalTempDir\miktex.xip"
     Download $latexurl $latexfile
     $xdir = "$LocalTempDir\miktex"
-    mkdir "$xdir"
-    & 'c:\rtools34\bin\unzip.exe' "$latexfile" -d "$xdir"
-    & "$xdir\miktexsetup.exe" --quiet  --package-set=complete download
+    mkdir "$xdir" -force
+    $repo = "https://ctan.math.illinois.edu/systems/win32/miktex/tm/packages/"
+    & 7z x "$latexfile" -o"$xdir"
+    & "$xdir\miktexsetup.exe" --quiet  --package-set=complete `
+      "--remote-package-repository=$repo" download
     & "$xdir\miktexsetup.exe" --quiet  --package-set=complete install
 }
 
@@ -132,9 +143,9 @@ Function Install-Pandoc {
     Download "$url2" "$file2"
 
     $xdir = "$LocalTempDir\pandoc"
-    mkdir "$xdir"
-    & 'c:\rtools34\bin\unzip.exe' -o "$file1" -d "$xdir"
-    & 'c:\rtools34\bin\unzip.exe' -o "$file2" -d "$xdir"
+    mkdir "$xdir" -force
+    & 7z x "$file1" -aoa -o"$xdir"
+    & 7z x "$file2" -aoa -o"$xdir"
 
     cp "$xdir\*.exe" c:\windows\
 }
@@ -155,8 +166,8 @@ Function Install-Jags {
     Download "$jagsurl" "$jagsfile"
 
     $xdir = "c:/R/jags"
-    mkdir "$xdir"
-    & 'c:\rtools34\bin\unzip.exe' "$jagsfile" -d "$xdir"
+    mkdir "$xdir"  -force
+    & 7z x "$jagsfile" -o"$xdir"
 
     $mv = "c:\R\Makevars.win"
     $mv64 = "c:\R\Makevars.win64"
@@ -240,12 +251,37 @@ Function Install-Perl {
     MSIEXEC /I $perlfile /passive
 }
 
+Function Install-Rtools40 {
+    # Experimental Rtools40 installation
+    $rtoolsurl = "https://dl.bintray.com/rtools/installer/rtools40-x86_64.exe"
+    $rtoolsfile = "$LocalTempDir\rtools40-x86_64.exe"
+    Download "$rtoolsurl" "$rtoolsfile"
+    Start-Process -FilePath "$rtoolsfile" -ArgumentList /VERYSILENT -NoNewWindow -Wait
+
+    # Rtools40 path is hardcoded in R-testing for now
+    # setx path "$c:\rtools40\usr\bin"
+
+    # Special build of R for Rtools40
+    $TestingUrl    = "https://dl.bintray.com/rtools/installer/R-testing-win.exe"
+    $TestingFile   = "$LocalTempDir\R-testing-win.exe"
+    Download "$TestingUrl"   "$TestingFile"
+    Start-Process -FilePath "$TestingFile" -ArgumentList "/VERYSILENT" -NoNewWindow -Wait
+}
+
+Function Update-Rtools40 {
+    & C:\rtools40\usr\bin\pacman --noconfirm -Syyu
+    & C:\rtools40\usr\bin\bash.exe --login -c `
+      'pacman -S --needed --noconfirm $(pacman -Slq | grep mingw-w64-)'
+}
+
+
 Updates-Off
 Set-Timezone
 
 Install-Git
 Install-Java
 Install-Chrome
+Install-7zip
 Install-R
 Install-Rtools
 Install-Latex
