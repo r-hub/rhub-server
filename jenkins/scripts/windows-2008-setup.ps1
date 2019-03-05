@@ -248,7 +248,7 @@ Function Install-Perl {
 
     Download "$perlurl" "$perlfile"
 
-    MSIEXEC /I $perlfile /passive
+    start-process msiexec -ArgumentList "/I $perlfile /passive" -wait
 }
 
 Function Install-Rtools40 {
