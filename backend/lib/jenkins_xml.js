@@ -22,13 +22,12 @@ function jenkins_xml(job, callback) {
 		'utf8',
 		function(err, command) {
 		    if (err) { console.log(err); callback(err); return; }
-		    var macos_version =
-			job.platforminfo["macos-version"] || "";
-		    var r_version = job.platforminfo["rversion"] || 'r-release';
+		    var labels = job.platforminfo['node-labels'] || [];
+		    labels.push('swarm');
+		    labels = labels.join(' && ');
 		    var data = { 'commands': xml_encode(command),
 				 'email': xml_encode(job.email),
-				 'macos-version': xml_encode(macos_version),
-				 'r-version': xml_encode(r_version) };
+				 'labels': xml_encode(labels)  };
 
 		    if (artifacts == "ssh") {
 		      fs.readFile('./templates/job-ssh-publish.txt',
