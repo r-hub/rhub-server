@@ -23,3 +23,15 @@ services:
    jenkins:
      ports:
      - "8080:8080"
+
+   sensuredis:
+     ports:
+     - "3004:6379"
+
+   monitorui:
+     ports:
+     - "3005:3000"
+
+   monitorapi:
+     ports:
+     - "3006:4567"

@@ -7,6 +7,7 @@ volumes:
    queue-data:
    jenkins-data:
    artifacts-data:
+   monitor-data:
 
 secrets:
   nginx.crt:
@@ -151,3 +152,46 @@ services:
      - sh
      - -c
      - /entrypoint.sh
+
+   monitor:
+     build: ./monitor
+     image: "rhub/monitor:${RHUB_VERSION}"
+     command: server
+     depends_on:
+     - sensuredis
+     environment:
+     - RHUB_EMAIL_FROM=${RHUB_EMAIL_FROM}
+     - RHUB_ADMIN_EMAIL=${RHUB_ADMIN_EMAIL}
+     - MAILGUN_DOMAIN=${MAILGUN_DOMAIN}
+     - MAILGUN_API_KEY=${MAILGUN_API_KEY}
+     - RHUB_EMAIL_MODE=${RHUB_EMAIL_MODE}
+     - RHUB_SMTP_SERVER=${RHUB_SMTP_SERVER}
+     - RHUB_SMTP_USERNAME=${RHUB_SMTP_USERNAME}
+     - RHUB_SMTP_PASSWORD=${RHUB_SMTP_PASSWORD}
+     - RHUB_SMTP_PORT=${RHUB_SMTP_PORT}
+     - RHUB_SMTP_TLS_REQUIRED=${RHUB_SMTP_TLS_REQUIRED}
+
+   monitorapi:
+     build: ./monitorapi
+     image: "rhub/monitorapi:${RHUB_VERSION}"
+     command: api
+     depends_on:
+     - sensuredis
+
+   monitorclient:
+     build: ./monitorclient
+     image: "rhub/monitorclient:${RHUB_VERSION}"
+     command: client
+     depends_on:
+     - sensuredis
+     volumes:
+     - /var/run/docker.sock:/var/run/docker.sock
+
+   monitorui:
+     build: ./monitorui
+     image: "rhub/monitorui:${RHUB_VERSION}"
+
+   sensuredis:
+     image: "redis:4.0.11-alpine"
+     volumes:
+     - monitor-data:/data

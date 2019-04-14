@@ -1,0 +1,74 @@
+{
+    "checks": {
+        "http-crandb.r-pkg.org": {
+            "command": "check-http.rb -u http://crandb.r-pkg.org/testthat",
+            "subscribers": [ "centralized" ],
+            "interval": 60
+        },
+        "https-crandb.r-pkg.org": {
+            "command": "check-http.rb -u https://crandb.r-pkg.org/testthat",
+            "subscribers": [ "centralized" ],
+            "interval": 60
+        },
+        "http-r-pkg.org": {
+            "command": "check-http.rb -u http://r-pkg.org -R https://r-pkg.org:443/",
+            "subscribers": [ "centralized" ],
+            "interval": 60
+        },
+        "https-r-pkg.org": {
+            "command": "check-http.rb -u https://r-pkg.org",
+            "subscribers": [ "centralized" ],
+            "interval": 60
+        },
+        "http-rversions.r-pkg.org": {
+            "command": "check-http.rb -u http://rversions.r-pkg.org/r-release -R https://rversions.r-pkg.org:443/r-release",
+            "subscribers": [ "centralized" ],
+            "interval": 60
+        },
+        "https-rversions.r-pkg.org": {
+            "command": "check-http.rb -u https://rversions.r-pkg.org/r-release",
+            "subscribers": [ "centralized" ],
+            "interval": 60
+        },
+        "http-cranlogs.r-pkg.org": {
+            "command": "check-http.rb -u http://cranlogs.r-pkg.org/downloads/daily/last-week/igraph -R https://cranlogs.r-pkg.org:443/downloads/daily/last-week/igraph",
+            "subscribers": [ "centralized" ],
+            "interval": 60
+        },
+        "https-cranlogs.r-pkg.org": {
+            "command": "check-http.rb -u https://cranlogs.r-pkg.org/downloads/daily/last-week/igraph",
+            "subscribers": [ "centralized" ],
+            "interval": 60
+        },
+        "http-seer.r-pkg.org": {
+            "command": "check-http.rb -u 'http://seer.r-pkg.org:9200/_search?q=igraph'",
+            "subscribers": [ "centralized" ],
+            "interval": 60
+        },
+        "http-search.r-pkg.org": {
+            "command": "check-http.rb -u 'http://search.r-pkg.org/_search?q=igraph'",
+            "subscribers": [ "centralized" ],
+            "interval": 60
+        },
+        "http-www.r-pkg.org-badges-version": {
+            "command": "check-http.rb -u 'http://www.r-pkg.org/badges/version/igraph' -R 'https://www.r-pkg.org:443/badges/version/igraph'",
+            "subscribers": [ "centralized" ],
+            "interval": 60
+        },
+        "https-www.r-pkg.org-badges-version": {
+            "command": "check-http.rb -u 'https://www.r-pkg.org/badges/version/igraph'",
+            "subscribers": [ "centralized" ],
+            "interval": 60
+        },
+        "http-sysreqs.r-hub.io": {
+            "command": "check-http.rb -u 'http://sysreqs.r-hub.io/list' -R https://sysreqs.r-hub.io:443/list",
+            "subscribers": [ "centralized" ],
+            "interval": 60
+        },
+        "https-sysreqs.r-hub.io": {
+            "command": "check-http.rb -u 'https://sysreqs.r-hub.io/list'",
+            "subscribers": [ "centralized" ],
+            "interval": 60
+        }
+    }
+}

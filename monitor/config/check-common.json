@@ -1,0 +1,16 @@
+{
+    "checks": {
+        "disk-usage": {
+            "command": "check-disk-usage.rb -p '/run/.*'",
+            "subscribers": [ "default" ],
+            "interval": 3600
+        },
+        "cpu_metrics": {
+            "type": "metric",
+            "command": "metrics-cpu.rb",
+            "subscribers": [ "default" ],
+            "interval": 60,
+            "handler": "debug"
+        }
+    }
+}

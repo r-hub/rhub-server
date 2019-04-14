@@ -1,0 +1,14 @@
+{
+    "mailer-mailgun": {
+	"mail_from": {{.RHUB_EMAIL_FROM | printf "%q" }},
+	"mail_to": {{.RHUB_ADMIN_EMAIL | printf "%q" }},
+	"mg_apikey": "{{.MAILGUN_API_KEY}}",
+	"mg_domain": " {{.MAILGUN_DOMAIN}}"
+    },
+    "handlers": {
+        "mailer-mailgun": {
+            "type": "pipe",
+            "command": "/opt/sensu/embedded/bin/handler-mailer-mailgun.rb"
+        }
+    }
+}

@@ -1,10 +1,33 @@
 #! /bin/bash
 
+# Check that we have a reasonable setup
+# GitHub Auth
+
+if [[ ! -z "$GITHUB_CLIENT_ID" -a "$RHUB_NO_GITHUB_AUTH" != "true" ]]; then
+    >&2 echo "GITHUB_CLIENT_ID is not set"
+fi
+
+if [[ ! -z "$GITHUB_CLIENT_SECRET" -a "RHUB_NO_GITHUB_AUTH" != "true" ]]; then
+    >&2 echo "GITHUB_CLIENT_SECRET is not set"
+fi
+
+# Email setup
+
+if [[ -z "$RHUB_EMAIL_MODE" -o "$RHUB_EMAIL_MODE" == "smtp" ]]; then
+    
+else
+
+fi
+
+# Check for active Docker Machine
+
 if [[ ! -z "$DOCKER_MACHINE_NAME"  ]]; then
     echo "RHUB> Active Docker Machine: $DOCKER_MACHINE_NAME"
 else
     echo "RHUB> No active Docker Machine"
 fi
+
+# We are ready to go
 
 if [[ -f stack.yml ]]; then
     echo "RHUB> Setting up base project"
