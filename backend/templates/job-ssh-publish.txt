@@ -9,7 +9,7 @@
               <transfers>
                 <jenkins.plugins.publish__over__ssh.BapSshTransfer>
                   <remoteDirectory>${JOB_BASE_NAME}</remoteDirectory>
-                  <sourceFiles>${JOB_BASE_NAME}/**/00install.out,${JOB_BASE_NAME}/**/00check.log,${JOB_BASE_NAME}/**/tests*/**/*.Rout*,${JOB_BASE_NAME}/*.tar.gz,${JOB_BASE_NAME}/*.tgz,${JOB_BASE_NAME}/*.zip,${JOB_BASE_NAME}/**/**.Rout,${JOB_BASE_NAME}/tests/**.Rout</sourceFiles>
+                  <sourceFiles>${JOB_BASE_NAME}/**/00install.out,${JOB_BASE_NAME}/**/00check.log,${JOB_BASE_NAME}/**/tests*/**/*.Rout*,${JOB_BASE_NAME}/*.tar.gz,${JOB_BASE_NAME}/*.tgz,${JOB_BASE_NAME}/*.zip,${JOB_BASE_NAME}/**/**.Rout</sourceFiles>
                   <excludes></excludes>
                   <removePrefix>${JOB_BASE_NAME}/</removePrefix>
                   <remoteDirectorySDF>false</remoteDirectorySDF>
