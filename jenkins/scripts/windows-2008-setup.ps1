@@ -223,16 +223,14 @@ Function Get-LocalSoft {
     "LIB_GSL=c:/R/local330"              | AC "$mv"
     "GLPK_HOME=c:/R/glpk32"              | AC "$mv"
     "SYMPHONY_HOME=c:/R/symphony32"      | AC "$mv"
-    "DLLFLAGS+=-Lc:/R/local330/lib/i386" | AC "$mv"
 
     $mv64 = "c:\R\Makevars.win64"
     "LIB_XML=c:/R/local330"              | AC "$mv64"
     "LIB_GSL=c:/R/local330"              | AC "$mv64"
     "GLPK_HOME=c:/R/glpk64"              | AC "$mv64"
     "SYMPHONY_HOME=c:/R/symphony64"      | AC "$mv64"
-    "DLLFLAGS+=-Lc:/R/local330/lib/x64"  | AC "$mv64"
 
-    SETX LOCAL_SOFT c:\R\local330 /M
+    SETX LOCAL_SOFT c:/R/local330 /M
     SETX R_MAKEVARS_WIN "$mv"     /M
     SETX R_MAKEVARS_WIN64 "$mv64" /M
 }
