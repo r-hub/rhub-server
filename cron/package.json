@@ -23,7 +23,7 @@
     "node": "8.12.x"
   },
   "dependencies": {
-    "async": "^2.0.0-rc.3",
+    "async": "^2.6.4",
     "cron": "^1.1.0",
     "jenkins": "^0.19.0"
   }
